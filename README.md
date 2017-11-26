@@ -31,11 +31,11 @@ optional arguments:
 For now we only support `python 3`.  
 To add your solution you should follow this convention:
 ```
-day-[number]/part-[number]/[your_login].py 			# your submission code
-day-[number]/part-[number]/inputs/[your_login].txt 	# your input file
+day-[number]/part-[number]/[your_login].py          # your submission code
+day-[number]/part-[number]/inputs/[your_login].txt  # your input file
 ```
 
-check the [https://github.com/lypnol/adventofcode-2016](2016) edition to see examples.
+check the [2016](https://github.com/lypnol/adventofcode-2016) edition to see examples.
 
 Your submission code should inherit from the `Submission` class from `submission.py` file:
 
