@@ -90,7 +90,7 @@ def get_inputs_for_contest(contest_path):
     for input_file in glob.glob(contest_path + '/inputs/*.txt'):
         with open(input_file, 'r') as content_file:
             input_name = os.path.os.path.basename(input_file).split('.')[0].lower()
-            inputs.append((input_name, content_file.read()))
+            inputs.append((input_name, content_file.read().rstrip()))
     return inputs
 
 def _run_submission(submission, input):
