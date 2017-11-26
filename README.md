@@ -7,6 +7,23 @@ The solutions are automatically tested with travis
 
 ## How to use
 
+```
+usage: main.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
+               [-v]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --last                Runs submissions from last day
+  -d DAY, --day DAY     Runs submissions for specific day
+  -p PART, --part PART  Runs submissions for specific day part
+  -a AUTHORS, --authors AUTHORS
+                        Runs submissions from specific authors, ex:
+                        user1,user2
+  -i IGNORE, --ignore IGNORE
+                        Ignores submissions from specific authors
+  -r, --restricted      Restricts inputs on specified author
+  -v, --verbose         Enable debug mode
+```
 
 
 ## How to contribute
