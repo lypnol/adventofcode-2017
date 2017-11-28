@@ -7,9 +7,10 @@ The solutions are automatically tested with travis
 
 ## How to use
 
+To run submissions use `run.py` script
 ```
-usage: main.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
-               [-v]
+usage: run.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
+              [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -25,28 +26,38 @@ optional arguments:
   -v, --verbose         Enable debug mode
 ```
 
-
 ## How to contribute
 
 For now we only support `python 3`.  
+
+You can use `create.py` tool to create a new empty submission:
+```
+usage: create.py [-h] [-p {1,2}] author day
+
+Creates new empty submission
+
+positional arguments:
+  author                Name of author (github login)
+  day                   Day of problem (between 1 and 25)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p {1,2}, --part {1,2}
+                        Create submission for one day part only
+```
+
 To add your solution you should follow this convention:
 ```
 day-[number]/part-[number]/[your_login].py          # your submission code
 day-[number]/part-[number]/inputs/[your_login].txt  # your input file
 ```
 
-check the [2016](https://github.com/lypnol/adventofcode-2016) edition to see examples.
-
 Your submission code should inherit from the `Submission` class from `submission.py` file:
-
 ```python
 from submission import Submission
 
 
 class MyAwesomeSubmission(Submission):
-
-    def author(self):
-        return 'Ayoub'
 
     def run(self, s):
     	# :param s: input in string format

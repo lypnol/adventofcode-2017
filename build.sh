@@ -10,7 +10,7 @@ do
             continue;
         else
             CHANGED=("${CHANGED[@]}" "${DAY}")
-            python main.py -d $DAY;
+            python run.py -d $DAY;
         fi
     fi
 done

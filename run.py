@@ -73,6 +73,7 @@ def load_submissions_for_contest(contest_path):
     contest = _context_name(contest_path)
     submissions = []
     for submission_file in submission_files:
+        author = os.path.basename(submission_file).split('.')[0]
         submission = None
         try:
             submission = _load_submission(contest_path, submission_file)
@@ -80,7 +81,7 @@ def load_submissions_for_contest(contest_path):
             if show_debug:
                 print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
         if submission is not None:
-            submissions.append(submission)
+            submissions.append((author, submission))
     return submissions
 
 def get_inputs_for_contest(contest_path):
@@ -93,8 +94,7 @@ def get_inputs_for_contest(contest_path):
             inputs.append((input_name, content_file.read().rstrip()))
     return inputs
 
-def _run_submission(submission, input):
-    author = submission.author()
+def _run_submission(author, submission, input):
     result = None
     try:
         result = submission.run(input)
@@ -106,7 +106,7 @@ def _run_submission(submission, input):
             if len(stack) > 15:
                 print('and %s other lines...' % (len(stack) - 15), file=sys.stderr)
             print(bcolors.ENDC)
-    return result, author
+    return result
 
 def run_submissions_for_contest(contest_path):
     print("\n" + bcolors.MAGENTA + bcolors.BOLD + "* contest %s:" % os.path.basename(contest_path) + bcolors.ENDC)
@@ -114,27 +114,26 @@ def run_submissions_for_contest(contest_path):
     inputs = get_inputs_for_contest(contest_path)
 
     try:
-        for input_from, input_content in inputs:
+        for input_author, input_content in inputs:
             prev_ans = None
             answers = []
             if not restricted_mode:
                 print("---------------------------------------------------")
-                print("On input from {yellow}{input_from}{end}".format(
+                print("On input from {yellow}{author}{end}".format(
                     yellow=bcolors.YELLOW,
                     end=bcolors.ENDC,
-                    input_from=input_from))
+                    author=input_author))
                 print("---------------------------------------------------")
-            for submission in submissions:
+            for author, submission in submissions:
                 time_before = datetime.datetime.now()
                 submission_obj = submission()
-                author = submission_obj.author().lower()
-                if restricted_mode and author != input_from:
+                if restricted_mode and author != input_author:
                     continue
                 if author_list is not None and author not in author_list:
                     continue
                 if except_list is not None and author in except_list:
                     continue
-                answer, author = _run_submission(submission_obj, input_content)
+                answer = _run_submission(author, submission_obj, input_content)
                 time_after = datetime.datetime.now()
                 msecs = (time_after - time_before).total_seconds() * 1000
                 print("\t{green}{author}{end}\t | {blue}{answer}{end} \t | {msecs:8.2f} ms".format(
@@ -185,7 +184,7 @@ def main():
     day = None
     part = None
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Runs contest submissions')
     parser.add_argument("--last", help="Runs submissions from last day", action="store_true")
     parser.add_argument("-d", "--day", help="Runs submissions for specific day", type=int)
     parser.add_argument("-p", "--part", help="Runs submissions for specific day part", type=int)
@@ -221,9 +220,9 @@ def main():
         # Full test
         run_submissions()
     elif part is None:
-        run_submissions_for_day(day, 'day-%s' % day)
+        run_submissions_for_day(day, 'day-%02d' % day)
     else:
-        run_submissions_for_day(day,'day-%s' % day, part)
+        run_submissions_for_day(day,'day-%02d' % day, part)
 
 if __name__ == "__main__":
    main()
