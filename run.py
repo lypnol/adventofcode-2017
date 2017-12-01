@@ -4,6 +4,7 @@ import traceback
 import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
+from tabulate import tabulate
 
 from submission import Submission
 
@@ -112,7 +113,7 @@ def run_submissions_for_contest(contest_path):
     print("\n" + bcolors.MAGENTA + bcolors.BOLD + "* contest %s:" % os.path.basename(contest_path) + bcolors.ENDC)
     submissions = load_submissions_for_contest(contest_path)
     inputs = get_inputs_for_contest(contest_path)
-
+    table = []
     try:
         for input_author, input_content in inputs:
             prev_ans = None
@@ -124,6 +125,7 @@ def run_submissions_for_contest(contest_path):
                     end=bcolors.ENDC,
                     author=input_author))
                 print("---------------------------------------------------")
+                table = []
             for author, submission in submissions:
                 time_before = datetime.datetime.now()
                 submission_obj = submission()
@@ -136,19 +138,18 @@ def run_submissions_for_contest(contest_path):
                 answer = _run_submission(author, submission_obj, input_content)
                 time_after = datetime.datetime.now()
                 msecs = (time_after - time_before).total_seconds() * 1000
-                print("\t{green}{author}{end}\t | {blue}{answer}{end} \t | {msecs:8.2f} ms".format(
-                    green=bcolors.GREEN,
-                    author=author,
-                    end=bcolors.ENDC,
-                    blue=bcolors.BLUE,
-                    answer=answer,
-                    yellow=bcolors.YELLOW,
-                    msecs=msecs))
-
+                table.append([
+                    "  {green}{author}{end}  ".format(green=bcolors.GREEN, author=author, end=bcolors.ENDC),
+                    "  {blue}{answer}{end}  ".format(blue=bcolors.BLUE, answer=answer, end=bcolors.ENDC),
+                    "  {msecs:8.2f} ms".format(msecs=msecs)
+                ])
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))
                 prev_ans = str(answer)
+            if not restricted_mode: print(tabulate(table))
+        if restricted_mode: print(tabulate(table))
     except DifferentAnswersException as e:
+        print(tabulate(table))
         print(bcolors.RED, "ERROR", e, bcolors.ENDC, file=sys.stderr)
         sys.exit(1)
 
