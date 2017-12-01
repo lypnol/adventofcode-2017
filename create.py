@@ -27,7 +27,7 @@ def create_submission(author, path):
 	submission_content = """from submission import Submission
 
 
-class {class_name}:
+class {class_name}(Submission):
 
 	def run(self, s):
 		# :param s: input in string format
