@@ -1,5 +1,7 @@
 #!/bin/bash
 # set -ev
+
+pip install -r requirements.txt
 declare a CHANGED
 
 for DAY_DIRECTORY in `git --no-pager diff --name-only ${TRAVIS_COMMIT_RANGE} | cut -d "/" -f1`
