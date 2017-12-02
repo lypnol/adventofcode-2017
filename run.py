@@ -10,7 +10,7 @@ from tabulate import tabulate
 
 from submission import Submission
 
-show_debug = False
+show_debug = True
 author_list = None
 except_list = None
 restricted_mode = False
@@ -83,6 +83,7 @@ def load_submissions_for_contest(contest_path):
         except:
             if show_debug:
                 print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
+                sys.exit(1)
         if submission is not None:
             submissions.append((author, submission))
     return submissions
@@ -102,8 +103,8 @@ def _run_submission(author, submission, input):
     try:
         result = submission.run(input)
     except:
-        print("error for author " + author)
         if show_debug:
+            print(bcolors.RED + "Error for author " + author + bcolors.ENDC, file=sys.stderr)
             print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
             if len(submission.get_debug_stack()) > 0:
                 print(bcolors.RED + "Debug trace for %s " % author, file=sys.stderr)
@@ -112,6 +113,7 @@ def _run_submission(author, submission, input):
                 if len(stack) > 15:
                     print('and %s other lines...' % (len(stack) - 15), file=sys.stderr)
                 print(bcolors.ENDC)
+            sys.exit(1)
     return result
 
 def run_submissions_for_contest(contest_path):
@@ -197,11 +199,11 @@ def main():
     parser.add_argument("-a", "--authors", help="Runs submissions from specific authors, ex: user1,user2", type=str)
     parser.add_argument("-i", "--ignore", help="Ignores submissions from specific authors", type=str)
     parser.add_argument("-r", "--restricted", help="Restricts inputs on specified author", action="store_true", default=False)
-    parser.add_argument("-v", "--verbose", help="Enable debug mode", action="store_true")
+    parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
     args = parser.parse_args()
 
     restricted_mode = args.restricted
-    show_debug = args.verbose
+    show_debug = not args.silent
 
     if args.last:
         day = int(_get_days()[-1][4:])
