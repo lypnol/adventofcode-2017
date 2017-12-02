@@ -116,6 +116,9 @@ def _run_submission(author, submission, input):
             sys.exit(1)
     return result
 
+def _sort_leaderboard(table):
+    return sorted(table, key=lambda r: r[2])
+
 def run_submissions_for_contest(contest_path):
     print("\n" + bcolors.MAGENTA + bcolors.BOLD + "* contest %s:" % os.path.basename(contest_path) + bcolors.ENDC)
     submissions = load_submissions_for_contest(contest_path)
@@ -153,10 +156,10 @@ def run_submissions_for_contest(contest_path):
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))
                 prev_ans = str(answer)
-            if not restricted_mode: print(tabulate(table))
-        if restricted_mode: print(tabulate(table))
+            if not restricted_mode: print(tabulate(_sort_leaderboard(table)))
+        if restricted_mode: print(tabulate(_sort_leaderboard(table)))
     except DifferentAnswersException as e:
-        print(tabulate(table))
+        print(tabulate(_sort_leaderboard(table)))
         print(bcolors.RED, "ERROR", e, bcolors.ENDC, file=sys.stderr)
         sys.exit(1)
 
