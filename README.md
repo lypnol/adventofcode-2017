@@ -10,7 +10,9 @@ The solutions are automatically tested with travis
 To run submissions use `run.py` script
 ```
 usage: run.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
-              [-v]
+              [-s]
+
+Runs contest submissions
 
 optional arguments:
   -h, --help            show this help message and exit
