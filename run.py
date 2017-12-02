@@ -40,7 +40,7 @@ def _get_days():
 
 # Return the list of the contests path for the given day path
 def _get_contests_path_for_day(day_path):
-    return glob.glob(day_path + '/' + CONTEST_PATH_PATTERN)
+    return sorted(glob.glob(day_path + '/' + CONTEST_PATH_PATTERN), key=lambda x: abs(int(x[-1:])))
 
 # Return contest number from path
 def _get_constest_number(contest_path):
