@@ -102,13 +102,16 @@ def _run_submission(author, submission, input):
     try:
         result = submission.run(input)
     except:
-        if show_debug and len(submission.get_debug_stack()) > 0:
-            print(bcolors.RED + "Debug trace for %s " % author, file=sys.stderr)
-            stack = submission.get_debug_stack()
-            print('\n'.join(submission.get_debug_stack()[:15]), file=sys.stderr)
-            if len(stack) > 15:
-                print('and %s other lines...' % (len(stack) - 15), file=sys.stderr)
-            print(bcolors.ENDC)
+        print("error for author " + author)
+        if show_debug:
+            print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
+            if len(submission.get_debug_stack()) > 0:
+                print(bcolors.RED + "Debug trace for %s " % author, file=sys.stderr)
+                stack = submission.get_debug_stack()
+                print('\n'.join(submission.get_debug_stack()[:15]), file=sys.stderr)
+                if len(stack) > 15:
+                    print('and %s other lines...' % (len(stack) - 15), file=sys.stderr)
+                print(bcolors.ENDC)
     return result
 
 def run_submissions_for_contest(contest_path):
