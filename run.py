@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 # python libs
 import argparse
 import traceback
