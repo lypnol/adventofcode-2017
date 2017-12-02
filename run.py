@@ -199,7 +199,7 @@ def main():
     show_debug = args.verbose
 
     if args.last:
-        day = _get_days()[-1][4:]
+        day = int(_get_days()[-1][4:])
     elif args.day:
         day = args.day
 
