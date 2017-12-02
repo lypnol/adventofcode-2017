@@ -201,7 +201,7 @@ def main():
     parser.add_argument("-p", "--part", help="Runs submissions for specific day part", type=int)
     parser.add_argument("-a", "--authors", help="Runs submissions from specific authors, ex: user1,user2", type=str)
     parser.add_argument("-i", "--ignore", help="Ignores submissions from specific authors", type=str)
-    parser.add_argument("-r", "--restricted", help="Restricts inputs on specified author", action="store_true", default=False)
+    parser.add_argument("-r", "--restricted", help="Restricts each author to their input only", action="store_true", default=False)
     parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
     args = parser.parse_args()
 

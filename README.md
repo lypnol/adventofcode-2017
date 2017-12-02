@@ -22,8 +22,8 @@ optional arguments:
                         user1,user2
   -i IGNORE, --ignore IGNORE
                         Ignores submissions from specific authors
-  -r, --restricted      Restricts inputs on specified author
-  -v, --verbose         Enable debug mode
+  -r, --restricted      Restricts each author to their input only
+  -s, --silent          Disable debug mode
 ```
 
 ## How to contribute
