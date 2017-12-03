@@ -32,13 +32,13 @@ class DavidSubmission(Submission):
 	def spiral(self, e):
 		"""
 			Returns in which spiral is an integer e
-			A spiral is identified by its length and start position
+			A spiral is identified by its length, start position and height
 
-			example: spiral(1) = (0, 1)
-			         spiral(2) = (1, 2)
-					 spiral(9) = (1, 2)
-					 spiral(10) = (2, 10)
-					 spiral(25) = (2, 25)
+			example: spiral(1) = (0, 1, 1)
+			         spiral(2) = (1, 2, 3)
+					 spiral(9) = (1, 2, 3)
+					 spiral(10) = (2, 10, 5)
+					 spiral(25) = (2, 25, 5)
 		"""
 		if e == 1:
 			return (0, 1, 1)
