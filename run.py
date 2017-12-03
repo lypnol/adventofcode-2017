@@ -72,7 +72,7 @@ def _load_submission(contest_path, submission, ext='.py'):
         submission_class = None
         classes = inspect.getmembers(submission_module, inspect.isclass)
         for _, cls_submission in classes:
-            if issubclass(cls_submission, Submission):
+            if issubclass(cls_submission, Submission) and cls_submission != Submission:
                 return cls_submission
     elif ext == '.js':
         with open(submission_path) as source:
