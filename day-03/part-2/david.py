@@ -31,7 +31,6 @@ class DavidSubmission(Submission):
 
 
 			table[next_pos] = sum([table[p] for p in self.neighbors(table, next_pos)])
-			self.debug("table[{}] = {}".format(next_pos, table[next_pos]))
 			pos = next_pos
 
 		return table[pos]
