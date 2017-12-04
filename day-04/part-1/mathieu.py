@@ -4,12 +4,10 @@ from submission import Submission
 class MathieuSubmission(Submission):
     def run(self, s):
         res=0
-        inputs=[line.split() for line in s.split('\n')]
-        for line in inputs:
-            valid=True
-            for word in line:
+        for line in s.split('\n'):
+            is_valid = True
+            for word in line.split():
                 if line.count(word)>1:
-                    valid=False
-            if valid:
-                res+=1
+                    is_valid=False
+            res+=is_valid
         return res
