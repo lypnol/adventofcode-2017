@@ -1,6 +1,8 @@
 #!/bin/bash
-# set -ev
 
+set -ev
+
+npm install
 pip install -r requirements.txt
 declare a CHANGED
 

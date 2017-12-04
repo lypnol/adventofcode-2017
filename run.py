@@ -1,14 +1,17 @@
 #! /usr/bin/env python3
 
-# python libs
+# stdlib
 import argparse
 import traceback
 import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
+# 3p
 from tabulate import tabulate
-
+# project
 from submission import Submission
+from submissionJs import SubmissionJsGenerator
+
 
 show_debug = True
 author_list = None
@@ -29,6 +32,7 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
+ALLOWED_EXT = ['.py', '.js']
 
 class DifferentAnswersException(Exception): pass
 
@@ -54,32 +58,36 @@ def _find_submissions_for_contest(contest_path):
     for _, _, files in walk(contest_path):
         for filename in files:
             submission, ext = os.path.splitext(filename)
-            if ext == '.py':
-                submission_files.append(submission)
+            if ext in ALLOWED_EXT:
+                submission_files.append((submission, ext))
     return submission_files
 
-def _load_submission(contest_path, submission):
-    submission_path = '%s/%s.py' % (contest_path, submission)
+def _load_submission(contest_path, submission, ext='.py'):
+    if not ext in ALLOWED_EXT: return None
+    submission_path = '%s/%s%s' % (contest_path, submission, ext)
     contest = _context_name(contest_path)
-    submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
-
-    submission_class = None
-    classes = inspect.getmembers(submission_module, inspect.isclass)
-    for _, cls_submission in classes:
-        if issubclass(cls_submission, Submission):
-            return cls_submission
-
+    submission_module = None
+    if ext == '.py':
+        submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
+        submission_class = None
+        classes = inspect.getmembers(submission_module, inspect.isclass)
+        for _, cls_submission in classes:
+            if issubclass(cls_submission, Submission) and cls_submission != Submission:
+                return cls_submission
+    elif ext == '.js':
+        with open(submission_path) as source:
+            return SubmissionJsGenerator(source.read())
     return None
 
 def load_submissions_for_contest(contest_path):
     submission_files = _find_submissions_for_contest(contest_path)
     contest = _context_name(contest_path)
     submissions = []
-    for submission_file in submission_files:
+    for submission_file, ext in submission_files:
         author = os.path.basename(submission_file).split('.')[0]
         submission = None
         try:
-            submission = _load_submission(contest_path, submission_file)
+            submission = _load_submission(contest_path, submission_file, ext)
         except:
             if show_debug:
                 print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
@@ -153,6 +161,9 @@ def run_submissions_for_contest(contest_path):
                     "  {blue}{answer}{end}  ".format(blue=bcolors.BLUE, answer=answer, end=bcolors.ENDC),
                     "  {msecs:8.2f} ms".format(msecs=msecs)
                 ])
+                if submission_obj.language() != "py":
+                    table[-1].append(submission_obj.language())
+
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))
                 prev_ans = str(answer)
