@@ -23,8 +23,3 @@ class XavierSubmission(Submission):
 		s = int(s)
 		layer = self.get_layer(s)
 		return layer + min([abs(s - k) for k in self.get_cardinals(layer)])
-
-if __name__ == "__main__":
-	print(XavierSubmission.get_cardinals(1))
-	print(XavierSubmission.get_cardinals(2))
-	print(XavierSubmission.get_cardinals(3))
