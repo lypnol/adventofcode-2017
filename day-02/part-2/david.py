@@ -9,7 +9,7 @@ class DavidSubmission(Submission):
 		# your solution code goes here
 
 		lines = s.split("\n")
-		lines = [[int(x) for x in l.split("\t")] for l in lines]
+		lines = [[int(x) for x in l.split()] for l in lines]
 		return sum([self.find_line_result(l) for l in lines])
 
 

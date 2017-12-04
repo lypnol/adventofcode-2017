@@ -7,6 +7,6 @@ class XavierSubmission(Submission):
 		c = 0
 		rows = s.split("\n")
 		for r in rows:
-			t = sorted(list(map(int, r.split("\t"))))
+			t = sorted(list(map(int, r.split())))
 			c += t[-1] - t[0]
 		return c
