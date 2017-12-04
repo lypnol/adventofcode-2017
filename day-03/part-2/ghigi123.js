@@ -6,8 +6,11 @@ disSin = angle => [0, 1, 0, -1][angle % 4];
 neighbors = (x, y) => {
     const res = [];
     _.forEach(_.range(-1, 2), i =>
-        _.forEach(_.range(-1, 2), j =>
-            (i !== 0 || j !== 0) && (res.push((x + i) + '_' + (y + j)))
+        _.forEach(_.range(-1, 2), j => {
+                if (i !== 0 || j !== 0) {
+                    res.push((x + i) + '_' + (y + j))
+                }
+            }
         )
     );
     return res;
@@ -17,7 +20,7 @@ function run(s) {
     const input = parseInt(s);
     let coords = {x: 0, y: 0};
     let values = {'0_0': 1};
-    let angle = 0, last = 1;
+    let angle = 0;
     let last = 1;
 
     while (last < input) {
