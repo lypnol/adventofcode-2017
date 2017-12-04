@@ -37,7 +37,6 @@ class SilvestreSubmission(Submission):
             new_last_row.append(new_last_row[-1] + matrix[-1][col-1] + matrix[-1][col])
             matrix.append(new_last_row)
 
-        print(matrix)
         result = max(max(row) for row in matrix)
         for i in range(len(matrix)-1):
             for j in range(len(matrix[0])-1):
