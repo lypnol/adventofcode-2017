@@ -13,10 +13,10 @@ class XavierSubmission(Submission):
 
 	@staticmethod
 	def get_cardinals(layer):
-		S = (2*layer + 1) ** 2 - layer
-		W = S - 2*layer
-		N = W - 2*layer
-		E = N - 2*layer
+		S = (2 * layer + 1) ** 2 - layer
+		W = S - 2 * layer
+		N = W - 2 * layer
+		E = N - 2 * layer
 		return [N, S, E, W]
 
 	def run(self, s):
