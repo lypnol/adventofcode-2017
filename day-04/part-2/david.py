@@ -20,6 +20,6 @@ class DavidSubmission(Submission):
 
 			elements.append(e)
 
-		return e
+		return True
 
 
