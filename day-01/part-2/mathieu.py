@@ -10,5 +10,5 @@ class MathieuSubmission(Submission):
         res = 0
         for i in range(step):
             if s[i] == s[i + step]:
-                res += 2 * int(s[i])
-        return str(res)
+                res += int(s[i])
+        return str(2*res)

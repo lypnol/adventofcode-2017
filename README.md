@@ -10,7 +10,9 @@ The solutions are automatically tested with travis
 To run submissions use `run.py` script
 ```
 usage: run.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
-              [-v]
+              [-s]
+
+Runs contest submissions
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -22,17 +24,17 @@ optional arguments:
                         user1,user2
   -i IGNORE, --ignore IGNORE
                         Ignores submissions from specific authors
-  -r, --restricted      Restricts inputs on specified author
-  -v, --verbose         Enable debug mode
+  -r, --restricted      Restricts each author to their input only
+  -s, --silent          Disable debug mode
 ```
 
 ## How to contribute
 
-For now we only support `python 3`.  
+For now we only support `python 3` and `javascript`.  
 
 You can use `create.py` tool to create a new empty submission:
 ```
-usage: create.py [-h] [-p {1,2}] author day
+usage: create.py [-h] [-p {1,2}] [-l {py,js}] author day
 
 Creates new empty submission
 
@@ -44,9 +46,13 @@ optional arguments:
   -h, --help            show this help message and exit
   -p {1,2}, --part {1,2}
                         Create submission for one day part only
+  -l {py,js}, --language {py,js}
+                        Use specified language
 ```
 
-To add your solution you should follow this convention:
+### Using python
+
+If you don't use `create.py` tool you should follow this convention:
 ```
 day-[number]/part-[number]/[your_login].py          # your submission code
 day-[number]/part-[number]/inputs/[your_login].txt  # your input file
@@ -64,3 +70,23 @@ class MyAwesomeSubmission(Submission):
     	# :return: solution flag
 ```
 
+You can add other functions & modules if you need to. Any external dependency should be added to `requirements.txt`.
+
+### Using javascript
+
+Similar to python, you can use `create.py` tool with the flag `-l js`, which will create the submission files.  
+Your submission code should implement a function `run` 
+```javascript
+/**
+* @param {string} s puzzle input in string format
+* @returns solution flag
+*/
+function run(s) {
+
+  // Your code goes here
+}
+```
+
+You can add other functions if you need to.  
+Any external dependency should be installed with `npm install --save [your dependency]` to be added into `package.json` file.  
+`userscorejs` is already installed. 

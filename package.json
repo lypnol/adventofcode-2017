@@ -1,0 +1,22 @@
+{
+  "name": "adventofcode",
+  "version": "1.0.0",
+  "description": "repository of proposed solutions to adventofcode 2017 edition",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lypnol/adventofcode-2017.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lypnol/adventofcode-2017/issues"
+  },
+  "homepage": "https://github.com/lypnol/adventofcode-2017#readme",
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}

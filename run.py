@@ -1,13 +1,19 @@
-# python libs
+#! /usr/bin/env python3
+
+# stdlib
 import argparse
 import traceback
 import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
-
+# 3p
+from tabulate import tabulate
+# project
 from submission import Submission
+from submissionJs import SubmissionJsGenerator
 
-show_debug = False
+
+show_debug = True
 author_list = None
 except_list = None
 restricted_mode = False
@@ -26,6 +32,7 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
+ALLOWED_EXT = ['.py', '.js']
 
 class DifferentAnswersException(Exception): pass
 
@@ -39,7 +46,7 @@ def _get_days():
 
 # Return the list of the contests path for the given day path
 def _get_contests_path_for_day(day_path):
-    return glob.glob(day_path + '/' + CONTEST_PATH_PATTERN)
+    return sorted(glob.glob(day_path + '/' + CONTEST_PATH_PATTERN), key=lambda x: abs(int(x[-1:])))
 
 # Return contest number from path
 def _get_constest_number(contest_path):
@@ -51,35 +58,40 @@ def _find_submissions_for_contest(contest_path):
     for _, _, files in walk(contest_path):
         for filename in files:
             submission, ext = os.path.splitext(filename)
-            if ext == '.py':
-                submission_files.append(submission)
+            if ext in ALLOWED_EXT:
+                submission_files.append((submission, ext))
     return submission_files
 
-def _load_submission(contest_path, submission):
-    submission_path = '%s/%s.py' % (contest_path, submission)
+def _load_submission(contest_path, submission, ext='.py'):
+    if not ext in ALLOWED_EXT: return None
+    submission_path = '%s/%s%s' % (contest_path, submission, ext)
     contest = _context_name(contest_path)
-    submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
-
-    submission_class = None
-    classes = inspect.getmembers(submission_module, inspect.isclass)
-    for _, cls_submission in classes:
-        if issubclass(cls_submission, Submission):
-            return cls_submission
-
+    submission_module = None
+    if ext == '.py':
+        submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
+        submission_class = None
+        classes = inspect.getmembers(submission_module, inspect.isclass)
+        for _, cls_submission in classes:
+            if issubclass(cls_submission, Submission) and cls_submission != Submission:
+                return cls_submission
+    elif ext == '.js':
+        with open(submission_path) as source:
+            return SubmissionJsGenerator(source.read())
     return None
 
 def load_submissions_for_contest(contest_path):
     submission_files = _find_submissions_for_contest(contest_path)
     contest = _context_name(contest_path)
     submissions = []
-    for submission_file in submission_files:
+    for submission_file, ext in submission_files:
         author = os.path.basename(submission_file).split('.')[0]
         submission = None
         try:
-            submission = _load_submission(contest_path, submission_file)
+            submission = _load_submission(contest_path, submission_file, ext)
         except:
             if show_debug:
                 print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
+                sys.exit(1)
         if submission is not None:
             submissions.append((author, submission))
     return submissions
@@ -99,20 +111,27 @@ def _run_submission(author, submission, input):
     try:
         result = submission.run(input)
     except:
-        if show_debug and len(submission.get_debug_stack()) > 0:
-            print(bcolors.RED + "Debug trace for %s " % author, file=sys.stderr)
-            stack = submission.get_debug_stack()
-            print('\n'.join(submission.get_debug_stack()[:15]), file=sys.stderr)
-            if len(stack) > 15:
-                print('and %s other lines...' % (len(stack) - 15), file=sys.stderr)
-            print(bcolors.ENDC)
+        if show_debug:
+            print(bcolors.RED + "Error for author " + author + bcolors.ENDC, file=sys.stderr)
+            print(bcolors.RED + ''.join(traceback.format_exc()) + bcolors.ENDC, file=sys.stderr)
+            if len(submission.get_debug_stack()) > 0:
+                print(bcolors.RED + "Debug trace for %s " % author, file=sys.stderr)
+                stack = submission.get_debug_stack()
+                print('\n'.join(submission.get_debug_stack()[:15]), file=sys.stderr)
+                if len(stack) > 15:
+                    print('and %s other lines...' % (len(stack) - 15), file=sys.stderr)
+                print(bcolors.ENDC)
+            sys.exit(1)
     return result
+
+def _sort_leaderboard(table):
+    return sorted(table, key=lambda r: r[2])
 
 def run_submissions_for_contest(contest_path):
     print("\n" + bcolors.MAGENTA + bcolors.BOLD + "* contest %s:" % os.path.basename(contest_path) + bcolors.ENDC)
     submissions = load_submissions_for_contest(contest_path)
     inputs = get_inputs_for_contest(contest_path)
-
+    table = []
     try:
         for input_author, input_content in inputs:
             prev_ans = None
@@ -124,6 +143,7 @@ def run_submissions_for_contest(contest_path):
                     end=bcolors.ENDC,
                     author=input_author))
                 print("---------------------------------------------------")
+                table = []
             for author, submission in submissions:
                 time_before = datetime.datetime.now()
                 submission_obj = submission()
@@ -136,19 +156,21 @@ def run_submissions_for_contest(contest_path):
                 answer = _run_submission(author, submission_obj, input_content)
                 time_after = datetime.datetime.now()
                 msecs = (time_after - time_before).total_seconds() * 1000
-                print("\t{green}{author}{end}\t | {blue}{answer}{end} \t | {msecs:8.2f} ms".format(
-                    green=bcolors.GREEN,
-                    author=author,
-                    end=bcolors.ENDC,
-                    blue=bcolors.BLUE,
-                    answer=answer,
-                    yellow=bcolors.YELLOW,
-                    msecs=msecs))
+                table.append([
+                    "  {green}{author}{end}  ".format(green=bcolors.GREEN, author=author, end=bcolors.ENDC),
+                    "  {blue}{answer}{end}  ".format(blue=bcolors.BLUE, answer=answer, end=bcolors.ENDC),
+                    "  {msecs:8.2f} ms".format(msecs=msecs)
+                ])
+                if submission_obj.language() != "py":
+                    table[-1].append(submission_obj.language())
 
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))
                 prev_ans = str(answer)
+            if not restricted_mode: print(tabulate(_sort_leaderboard(table)))
+        if restricted_mode: print(tabulate(_sort_leaderboard(table)))
     except DifferentAnswersException as e:
+        print(tabulate(_sort_leaderboard(table)))
         print(bcolors.RED, "ERROR", e, bcolors.ENDC, file=sys.stderr)
         sys.exit(1)
 
@@ -190,15 +212,15 @@ def main():
     parser.add_argument("-p", "--part", help="Runs submissions for specific day part", type=int)
     parser.add_argument("-a", "--authors", help="Runs submissions from specific authors, ex: user1,user2", type=str)
     parser.add_argument("-i", "--ignore", help="Ignores submissions from specific authors", type=str)
-    parser.add_argument("-r", "--restricted", help="Restricts inputs on specified author", action="store_true", default=False)
-    parser.add_argument("-v", "--verbose", help="Enable debug mode", action="store_true")
+    parser.add_argument("-r", "--restricted", help="Restricts each author to their input only", action="store_true", default=False)
+    parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
     args = parser.parse_args()
 
     restricted_mode = args.restricted
-    show_debug = args.verbose
+    show_debug = not args.silent
 
     if args.last:
-        day = _get_days()[-1][4:]
+        day = int(_get_days()[-1][4:])
     elif args.day:
         day = args.day
 

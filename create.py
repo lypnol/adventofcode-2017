@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import argparse
 import os.path
 import sys 
@@ -21,10 +23,11 @@ def make_dirs(day, parts):
 		dirs.append((part_dir, inputs_dir))
 	return dirs
 
-def create_submission(author, path):
+def create_submission(author, path, language):
 	class_name = ''.join(x for x in "{} submission".format(author).title() if not x.isspace())
-	submission_file = os.path.join(path, author + ".py")
-	submission_content = """from submission import Submission
+	submission_file = os.path.join(path, author + "." + language)
+	if language == 'py':
+		submission_content = """from submission import Submission
 
 
 class {class_name}(Submission):
@@ -36,6 +39,19 @@ class {class_name}(Submission):
 		pass
 
 """.format(class_name=class_name)
+	elif language == 'js':
+		submission_content = """
+/**
+* @param {{string}} s puzzle input in string format
+* @returns solution flag
+*/
+function run(s) {
+
+	// Your code goes here
+}
+
+"""
+
 	if os.path.exists(submission_file):
 		raise FileNotEmptyException("{} not empty".format(submission_file))
 	with open(submission_file, 'w') as f:
@@ -55,17 +71,24 @@ def main():
 	parser.add_argument('author', type=str, help='Name of author (github login)')
 	parser.add_argument('day', type=int, help='Day of problem (between 1 and 25)')
 	parser.add_argument('-p', '--part', type=int, help='Create submission for one day part only', choices=[1, 2])
+	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js"])
 	args = parser.parse_args()
 
 	author = args.author.lower()
 	dirs = make_dirs(args.day, [1, 2] if not args.part else [args.part])
 	for submission_path, input_path in dirs:
 		try:
-			create_submission(author, submission_path)
-			create_input(author, input_path)
+			create_submission(author, submission_path, args.language)
 		except FileNotEmptyException as e:
 			print(e, file=sys.stderr)
-			return
+			sys.exit(1)
+		try:
+			create_input(author, input_path)
+		except FileNotEmptyException:
+			pass
+		except Exception as e:
+			print(e, file=sys.stderr)
+			sys.exit(1)
 
 if __name__ == '__main__':
 	main()
