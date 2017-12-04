@@ -5,12 +5,10 @@ class MathieuSubmission(Submission):
 
 	def run(self, s):
 		res = 0
-		inputs = [line.split() for line in s.split('\n')]
-		for line in inputs:
-			valid = True
-			for word in line:
-				if line.count(word) > 1 or list(map(set,line)).count(set(word))>1:
-					valid = False
-			if valid:
-				res += 1
+		for line in s.split('\n'):
+			is_valid = True
+			for word in line.split():
+				if list(map(set,line.split())).count(set(word))>1:
+					is_valid = False
+			res += is_valid
 		return res
