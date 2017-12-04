@@ -17,7 +17,7 @@ function run(s) {
     const input = parseInt(s);
     let coords = {x: 0, y: 0};
     let values = {'0_0': 1};
-    let angle = 0, last = 1;
+    let angle = 0;
     let last = 1;
 
     while (last < input) {
