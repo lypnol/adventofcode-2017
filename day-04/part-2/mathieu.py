@@ -10,5 +10,6 @@ class MathieuSubmission(Submission):
 			for word in line.split():
 				if list(map(set,line.split())).count(set(word))>1:
 					is_valid = False
+					break
 			res += is_valid
 		return res
