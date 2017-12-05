@@ -17,7 +17,7 @@ class LudogeSubmission(Submission):
 				offsets[i]-=1
 			else:
 				offsets[i]+=1
-			if i+offsets[i]-1>=len(offsets):
+			if i+oldoffset>=len(offsets):
 				return steps
 			else:
 				i+=oldoffset
