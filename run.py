@@ -9,8 +9,8 @@ from os import walk
 # 3p
 from tabulate import tabulate
 # project
-from submission import Submission
-from submissionJs import SubmissionJsGenerator
+from runners.python import Submission
+from runners.js import SubmissionJsGenerator
 
 
 show_debug = True

@@ -1,7 +1,7 @@
 # 3p
 import execjs
 # project
-from submission import Submission
+from runners.python import Submission
 
 
 class CompilerError(Exception): pass

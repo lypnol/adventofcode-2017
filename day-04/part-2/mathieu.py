@@ -1,4 +1,4 @@
-from submission import Submission
+from runners.python import Submission
 
 
 class MathieuSubmission(Submission):

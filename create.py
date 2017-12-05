@@ -2,13 +2,13 @@
 
 import argparse
 import os.path
-import sys 
+import sys
 
 
 class FileNotEmptyException(Exception): pass
 
 def mkdirp(path):
-	if not os.path.exists(path): 
+	if not os.path.exists(path):
 		os.makedirs(path)
 
 def make_dirs(day, parts):
@@ -27,7 +27,7 @@ def create_submission(author, path, language):
 	class_name = ''.join(x for x in "{} submission".format(author).title() if not x.isspace())
 	submission_file = os.path.join(path, author + "." + language)
 	if language == 'py':
-		submission_content = """from submission import Submission
+		submission_content = """from runners.python import Submission
 
 
 class {class_name}(Submission):
