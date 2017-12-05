@@ -11,7 +11,7 @@ class BadouralixSubmission(Submission):
 		checksum = 0
 
 		for row in rows:
-			cells = [int(n) for n in row.split('\t')]
+			cells = [int(n) for n in row.split()]
 			checksum += max(cells) - min(cells)
 
 		return checksum

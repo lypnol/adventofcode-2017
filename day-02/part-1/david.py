@@ -9,5 +9,5 @@ class DavidSubmission(Submission):
 		# your solution code goes here
 
 		lines = s.split("\n")
-		integers = [[int(x) for x in l.split("\t")] for l in lines]
+		integers = [[int(x) for x in l.split()] for l in lines]
 		return sum((max(l) - min(l)) for l in integers)

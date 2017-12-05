@@ -10,7 +10,7 @@ class BadouralixSubmission(Submission):
 		checksum = 0
 
 		for row in rows:
-			cells = [int(n) for n in row.split('\t')]
+			cells = [int(n) for n in row.split()]
 			for i in range(len(cells)):
 				for j in range(i+1, len(cells)):
 					maxi = max(cells[i], cells[j])

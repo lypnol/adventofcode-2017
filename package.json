@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lypnol/adventofcode-2017#readme",
   "dependencies": {
+    "lodash": "^4.17.4",
     "underscore": "^1.8.3"
   }
 }
