@@ -11,6 +11,7 @@ class LudogeSubmission(Submission):
 		i=0
 		steps=0
 		while True:
+			steps+=1
 			oldoffset = offsets[i]
 			if offsets[i]>=3:
 				offsets[i]-=1
@@ -20,6 +21,5 @@ class LudogeSubmission(Submission):
 				return steps
 			else:
 				i+=oldoffset
-				steps+=1
 		pass
 
