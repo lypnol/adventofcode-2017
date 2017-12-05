@@ -44,10 +44,9 @@ class {class_name}(Submission):
 * @param {{string}} s puzzle input in string format
 * @returns solution flag
 */
-function run(s) {
-
+run = s => {
 	// Your code goes here
-}
+};
 
 """
 

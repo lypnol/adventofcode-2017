@@ -1,54 +1,26 @@
-# 3p
-import execjs
-# project
+import subprocess, os
 from runners.python import Submission
-
-
-class CompilerError(Exception): pass
 
 class SubmissionJs(Submission):
 
-	def __init__(self, compiled):
+	def __init__(self, file):
 		Submission.__init__(self)
-		self.compiled = compiled
+		self.file = file
 
 	def language(self):
 		return 'js'
 
 	def run(self, s):
-		if self.compiled is None:
-			raise CompilerError("Js source not compiled")
-		answer, stdout = self.compiled.call('console.run', s)
-		if stdout:
-			print(stdout)
-		return answer
-
-class SubmissionJsGenerator:
-	def __init__(self, source):
-		console = """
-var console = {
-	lines: [],
-	log: function() {
-		var parts = [];
-		for (var i = 0; i < arguments.length; i++) {
-			parts.push(arguments[i].toString());
-		}
-		var line = parts.join(' ');
-		console.lines.push(line);
-		return line;
-	},
-	flush: function() {
-		if (console.lines.length) {
-			return console.lines.join('\\n');
-		}
-		return null;
-	},
-	run: function(input) {
-		return [run(input), console.flush()];
-	}
-};
-"""
-		self.compiled = execjs.compile(console + source)
+		try:
+			output = subprocess.check_output(["node", "-e", "{script}\nconsole.log(run(process.argv[1]));".format(script=open(self.file).read()), s]).decode()
+			return output.split('\n')[-2]
+		except OSError as e:
+			if e.errno == os.errno.ENOENT:
+				# executable not found
+				return None
+			else:
+				# subprocess exited with another error
+				return None
 
 	def __call__(self):
-		return SubmissionJs(self.compiled)
+		return SubmissionJs(self.file)
