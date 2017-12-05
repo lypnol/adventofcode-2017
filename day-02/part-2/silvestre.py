@@ -7,7 +7,7 @@ class SilvestreSubmission(Submission):
         # :param s: input in string format
         # :return: solution flag
         # your solution code goes here
-        table_str = [row.split("\t") for row in s.split("\n")]
+        table_str = [row.split() for row in s.split("\n")]
         table_int = [list(map(int, row)) for row in table_str]
         result = 0
         return sum(self.get_row_result(row) for row in table_int)

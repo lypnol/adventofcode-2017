@@ -5,7 +5,7 @@ class XavierSubmission(Submission):
 
 	@staticmethod
 	def _get_dividers(r):
-		t = sorted(list(map(int, r.split("\t"))), reverse=True)
+		t = sorted(list(map(int, r.split())), reverse=True)
 		for i in range(len(t)):
 			for j in range(i + 1, len(t)):
 				if t[i] % t[j] == 0:
