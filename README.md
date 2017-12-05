@@ -60,8 +60,7 @@ day-[number]/part-[number]/inputs/[your_login].txt  # your input file
 
 Your submission code should inherit from the `Submission` class from `submission.py` file:
 ```python
-from submission import Submission
-
+from runners.python import Submission
 
 class MyAwesomeSubmission(Submission):
 
@@ -81,10 +80,9 @@ Your submission code should implement a function `run`
 * @param {string} s puzzle input in string format
 * @returns solution flag
 */
-function run(s) {
-
+run = s => {
   // Your code goes here
-}
+};
 ```
 
 You can add other functions if you need to.  
