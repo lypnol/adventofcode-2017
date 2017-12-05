@@ -8,4 +8,4 @@ function run(s) {
                     ? parseInt(e)
                     : 0)
     );
-}
+};

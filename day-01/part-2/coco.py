@@ -1,4 +1,4 @@
-from runners.python import Submission
+from submission import Submission
 
 
 class CocoSubmission(Submission):

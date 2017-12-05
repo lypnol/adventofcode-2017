@@ -1,5 +1,5 @@
 import math
-from runners.python import Submission
+from submission import Submission
 
 
 class SilvestreSubmission(Submission):

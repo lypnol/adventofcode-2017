@@ -29,7 +29,6 @@ def create_submission(author, path, language):
 	if language == 'py':
 		submission_content = """from runners.python import Submission
 
-
 class {class_name}(Submission):
 
 	def run(self, s):
