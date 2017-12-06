@@ -3,12 +3,13 @@ from submission import Submission
 
 class MathieuSubmission(Submission):
     def run(self, s):
-        banks = [int(x) for x in s.split()]
+        banks = [int(x) for x in s.split('\t')]
         n = len(banks)
         history = set()
         cycle = 0
-        while tuple(banks) not in history:
-            history.add(tuple(banks))
+        tpl_banks=tuple(banks)
+        while tpl_banks not in history:
+            history.add(tpl_banks)
             buffer = max(banks)
             i = banks.index(buffer)
             banks[i] = 0
@@ -19,4 +20,5 @@ class MathieuSubmission(Submission):
                 banks[i] += 1
                 buffer -= 1
             cycle += 1
+            tpl_banks = tuple(banks)
         return cycle
