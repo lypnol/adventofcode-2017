@@ -1,4 +1,3 @@
-import hashlib
 from submission import Submission
 
 
@@ -10,10 +9,10 @@ class JulesSubmission(Submission):
         # your solution code goes here
         banks = [int(x) for x in s.split()]
         counter = 0
-        seen = []
-        while hashlib.blake2b(''.join([str(x) for x in banks]).encode('utf-8')).hexdigest() not in seen:
+        seen = dict()
+        while tuple(banks) not in seen:
+            seen[tuple(banks)] = counter
             counter += 1
-            seen.append(hashlib.blake2b(''.join([str(x) for x in banks]).encode('utf-8')).hexdigest())
             max_index = banks.index(max(banks))
             value = banks[max_index]
             banks[max_index] = 0
@@ -22,4 +21,4 @@ class JulesSubmission(Submission):
                 banks[(max_index + i) % len(banks)] += 1
                 value -= 1
                 i += 1
-        return counter - seen.index(hashlib.blake2b(''.join([str(x) for x in banks]).encode('utf-8')).hexdigest())
+        return counter - seen[tuple(banks)]
