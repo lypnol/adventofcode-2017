@@ -9,5 +9,6 @@ class MathieuSubmission(Submission):
             for word in line.split():
                 if line.split().count(word)>1:
                     is_valid=False
+                    break
             res+=is_valid
         return res
