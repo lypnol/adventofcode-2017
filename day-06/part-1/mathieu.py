@@ -3,19 +3,20 @@ from submission import Submission
 
 class MathieuSubmission(Submission):
     def run(self, s):
-        banks = list(map(int, s.split("\t")))
+        banks = [int(x) for x in s.split()]
         n = len(banks)
-        history = list()
+        history = set()
         cycle = 0
-        while banks not in history:
-            history.append(list(banks))
+        while tuple(banks) not in history:
+            history.add(tuple(banks))
             buffer = max(banks)
-            chosen_bank = banks.index(max(banks))
-            banks[chosen_bank] -= buffer
-            i = (chosen_bank + 1) % n
+            i = banks.index(buffer)
+            banks[i] = 0
             while buffer > 0:
+                i += 1
+                if i == n:
+                    i = 0
                 banks[i] += 1
-                i = (i + 1) % n
                 buffer -= 1
             cycle += 1
         return cycle
