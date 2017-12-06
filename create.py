@@ -34,13 +34,12 @@ class {class_name}(Submission):
 	def run(self, s):
 		# :param s: input in string format
 		# :return: solution flag
-		# your solution code goes here
+		# Your code goes here
 		pass
 
 """.format(class_name=class_name)
 	elif language == 'js':
-		submission_content = """
-/**
+		submission_content = """/**
  * @param {{string}} s puzzle input in string format
  * @returns solution flag
  */
@@ -48,6 +47,22 @@ run = s => {
 	// Your code goes here
 };
 
+"""
+	elif language == 'go':
+		submission_content = """package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func run(s string) int {
+    // Your code goes here
+}
+
+func main() {
+    fmt.Println(run(os.Args[1]))
+}
 """
 
 	if os.path.exists(submission_file):
@@ -69,7 +84,7 @@ def main():
 	parser.add_argument('author', type=str, help='Name of author (github login)')
 	parser.add_argument('day', type=int, help='Day of problem (between 1 and 25)')
 	parser.add_argument('-p', '--part', type=int, help='Create submission for one day part only', choices=[1, 2])
-	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js"])
+	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js", "go"])
 	args = parser.parse_args()
 
 	author = args.author.lower()

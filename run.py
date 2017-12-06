@@ -10,6 +10,7 @@ from os import walk
 from runners.python import Submission
 from submission import Submission as OldSubmission
 from runners.js import SubmissionJs
+from runners.go import SubmissionGo
 # utils
 from tabulate import tabulate
 from utils import is_tool
@@ -35,7 +36,7 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
-ALLOWED_EXT = ['.py', '.js']
+ALLOWED_EXT = ['.py', '.js', '.go']
 
 class DifferentAnswersException(Exception): pass
 
@@ -78,6 +79,8 @@ def _load_submission(contest_path, submission, ext='.py'):
                 return cls_submission
     elif ext == '.js' and (forced_mode or is_tool('node')):
         return SubmissionJs(submission_path)
+    elif ext == '.go' and (forced_mode or is_tool('go')):
+        return SubmissionGo(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):
