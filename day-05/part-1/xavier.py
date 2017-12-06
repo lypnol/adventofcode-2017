@@ -1,3 +1,5 @@
+from array import array
+
 from submission import Submission
 
 
@@ -11,5 +13,6 @@ class XavierSubmission(Submission):
 				c += 1
 				s[p] += 1
 				p += s[p] - 1
-			except IndexError:
+			except:
 				return c - 1
+
