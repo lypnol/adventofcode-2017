@@ -3,6 +3,8 @@ python:
   - "3.6"
 node_js:
   - "8"
+go:
+  - 1.9
 script: ./build.sh
 notifications:
   email: false
