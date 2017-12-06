@@ -1,10 +1,6 @@
 const _ = require('lodash');
 
-run = s => {
-    let am;
-    const table = _.map(_.split(s, '\t'), n => parseInt(n));
-    am = _.cloneDeep(table);
-    const set = {};
+exp = (table, set) => {
     while (!(_.join(table, '_') in set)) {
         set[_.join(table, '_')] = 1;
         const maxIdx = _.maxBy(_.range(_.size(table)), idx => table[idx]);
@@ -15,4 +11,9 @@ run = s => {
         }
     }
     return _.size(set);
+};
+
+run = s => {
+    const table = _.map(_.split(s, '\t'), n => parseInt(n));
+    return exp(table, {});
 };
