@@ -6,17 +6,19 @@ import traceback
 import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
-# 3p
-from tabulate import tabulate
-# project
+# submissions
 from runners.python import Submission
 from submission import Submission as OldSubmission
 from runners.js import SubmissionJs
+# utils
+from tabulate import tabulate
+from utils import is_tool
 
 
 show_debug = True
 author_list = None
 except_list = None
+forced_mode = False
 restricted_mode = False
 
 # To print colors in terminal
@@ -74,7 +76,7 @@ def _load_submission(contest_path, submission, ext='.py'):
         for _, cls_submission in classes:
             if issubclass(cls_submission, Submission) and cls_submission != Submission and cls_submission != OldSubmission:
                 return cls_submission
-    elif ext == '.js':
+    elif ext == '.js' and (forced_mode or is_tool('node')):
         return SubmissionJs(submission_path)
     return None
 
@@ -200,18 +202,20 @@ def main():
     global show_debug
     global author_list
     global except_list
+    global forced_mode
     global restricted_mode
 
     day = None
     part = None
 
-    parser = argparse.ArgumentParser(description='Runs contest submissions')
-    parser.add_argument("--last", help="Runs submissions from last day", action="store_true")
-    parser.add_argument("-d", "--day", help="Runs submissions for specific day", type=int)
-    parser.add_argument("-p", "--part", help="Runs submissions for specific day part", type=int)
-    parser.add_argument("-a", "--authors", help="Runs submissions from specific authors, ex: user1,user2", type=str)
-    parser.add_argument("-i", "--ignore", help="Ignores submissions from specific authors", type=str)
-    parser.add_argument("-r", "--restricted", help="Restricts each author to their input only", action="store_true", default=False)
+    parser = argparse.ArgumentParser(description='Run contest submissions')
+    parser.add_argument("--last", help="Run submissions from last day", action="store_true")
+    parser.add_argument("-d", "--day", help="Run submissions for specific day", type=int)
+    parser.add_argument("-p", "--part", help="Run submissions for specific day part", type=int)
+    parser.add_argument("-a", "--authors", help="Run submissions from specific authors, ex: user1,user2", type=str)
+    parser.add_argument("-i", "--ignore", help="Ignore submissions from specific authors", type=str)
+    parser.add_argument("-f", "--force", help="Force running submissions even if tool is missing",action="store_true", default=False)
+    parser.add_argument("-r", "--restricted", help="Restrict each author to their input only", action="store_true", default=False)
     parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
     args = parser.parse_args()
 
@@ -232,6 +236,8 @@ def main():
     if args.ignore:
         except_list = args.ignore.split(',')
 
+    if args.force:
+        forced_mode = True
 
     if day is None and part is not None:
         for day_path in _get_days():
