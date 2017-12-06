@@ -16,8 +16,11 @@ console.log(result);
 
 	def run(self, s):
 		try:
-			output = subprocess.check_output(["node", "-e", self.script, s]).decode()
-			return output.split('\n')[-2]
+			output_raw = subprocess.check_output(["node", "-e", self.script, s]).decode()
+			output_rows = output_raw.split('\n')[:-1]
+			if len(output_rows) > 1:
+				print('\n'.join(output_rows[:-1]))
+			return output_rows[-1]
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found
