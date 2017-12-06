@@ -5,22 +5,24 @@ class BadouralixSubmission(Submission):
 	def run(self, s):
 		# :param s: input in string format
 		# :return: solution flag
-		banks = tuple(int(x) for x in s.split())
+		banks = [int(x) for x in s.split()]
+		record = tuple(banks)
 		history = dict()
-		while not self.already_seen(banks, history):
-			history[banks] = len(history)
-			banks = self.run_cycle(banks)
-		return len(history) - history[banks]
+		while not self.already_seen(record, history):
+			history[record] = len(history)
+			self.run_cycle(banks)
+			record = tuple(banks)
+		return len(history) - history[record]
 
 	def run_cycle(self, banks):
-		banks = list(banks)
 		size = len(banks)
 		max_value = max(banks)
 		max_index = banks.index(max_value)
+		eucl_quo = max_value // size
+		eucl_rem = max_value % size
 		banks[max_index] = 0
 		for offset in range(1, size+1):
-			banks[(max_index + offset) % size] += (max_value // size) + (offset <= max_value % size)
-		return tuple(banks)
+			banks[(max_index + offset) % size] += eucl_quo+ (offset <= eucl_rem)
 
 	def already_seen(self, banks, history):
 		return banks in history
