@@ -41,9 +41,9 @@ class {class_name}(Submission):
 	elif language == 'js':
 		submission_content = """
 /**
-* @param {{string}} s puzzle input in string format
-* @returns solution flag
-*/
+ * @param {{string}} s puzzle input in string format
+ * @returns solution flag
+ */
 run = s => {
 	// Your code goes here
 };

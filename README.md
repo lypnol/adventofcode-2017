@@ -30,7 +30,7 @@ optional arguments:
 
 ## How to contribute
 
-For now we only support `python 3` and `javascript`.  
+For now we only support `python 3` and `javascript`.
 
 You can use `create.py` tool to create a new empty submission:
 ```
@@ -73,8 +73,8 @@ You can add other functions & modules if you need to. Any external dependency sh
 
 ### Using javascript
 
-Similar to python, you can use `create.py` tool with the flag `-l js`, which will create the submission files.  
-Your submission code should implement a function `run` 
+Similar to python, you can use `create.py` tool with the flag `-l js`, which will create the submission files.
+Your submission code should implement a function `run`
 ```javascript
 /**
 * @param {string} s puzzle input in string format
@@ -85,6 +85,6 @@ run = s => {
 };
 ```
 
-You can add other functions if you need to.  
-Any external dependency should be installed with `npm install --save [your dependency]` to be added into `package.json` file.  
-`userscorejs` is already installed. 
+You can add other functions if you need to.
+Any external dependency should be installed with `npm install --save [your dependency]` to be added into `package.json` file.
+`userscorejs` is already installed.
