@@ -1,10 +1,10 @@
 import subprocess, os
-from runners.python import Submission
+from .wrapper import SubmissionWrapper
 
-class SubmissionJs(Submission):
+class SubmissionJs(SubmissionWrapper):
 
 	def __init__(self, file):
-		Submission.__init__(self)
+		SubmissionWrapper.__init__(self)
 		self.file = file
 		self.script = """{script}
 result = run(process.argv[1]);
@@ -14,13 +14,9 @@ console.log(result);
 	def language(self):
 		return 'js'
 
-	def run(self, s):
+	def exec(self, input):
 		try:
-			output_raw = subprocess.check_output(["node", "-e", self.script, s]).decode()
-			output_rows = output_raw.split('\n')[:-1]
-			if len(output_rows) > 1:
-				print('\n'.join(output_rows[:-1]))
-			return output_rows[-1]
+			return subprocess.check_output(["node", "-e", self.script, input]).decode()
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found

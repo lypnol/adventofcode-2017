@@ -1,10 +1,10 @@
 import subprocess, os
-from runners.python import Submission
+from .wrapper import SubmissionWrapper
 
-class SubmissionGo(Submission):
+class SubmissionGo(SubmissionWrapper):
 
 	def __init__(self, file):
-		Submission.__init__(self)
+		SubmissionWrapper.__init__(self)
 		self.file = file
 
 	def language(self):

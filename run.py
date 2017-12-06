@@ -8,9 +8,10 @@ import os.path
 from os import walk
 # submissions
 from runners.python import Submission
-from submission import Submission as OldSubmission
 from runners.js import SubmissionJs
 from runners.go import SubmissionGo
+from submission import Submission as SubmissionOld
+from runners.wrapper import SubmissionWrapper
 # utils
 from tabulate import tabulate
 from utils import is_tool
@@ -38,7 +39,8 @@ DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
 ALLOWED_EXT = ['.py', '.js', '.go']
 
-class DifferentAnswersException(Exception): pass
+class DifferentAnswersException(Exception):
+    pass
 
 def _context_name(context_path):
     return context_path.replace('/','_').replace('-','_')
@@ -75,7 +77,7 @@ def _load_submission(contest_path, submission, ext='.py'):
         submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
         classes = inspect.getmembers(submission_module, inspect.isclass)
         for _, cls_submission in classes:
-            if issubclass(cls_submission, Submission) and cls_submission != Submission and cls_submission != OldSubmission:
+            if issubclass(cls_submission, Submission) and cls_submission not in (Submission, SubmissionOld, SubmissionWrapper):
                 return cls_submission
     elif ext == '.js' and (forced_mode or is_tool('node')):
         return SubmissionJs(submission_path)
