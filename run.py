@@ -9,8 +9,9 @@ from os import walk
 # 3p
 from tabulate import tabulate
 # project
-from submission import Submission
-from submissionJs import SubmissionJsGenerator
+from runners.python import Submission
+from submission import Submission as OldSubmission
+from runners.js import SubmissionJs
 
 
 show_debug = True
@@ -69,14 +70,12 @@ def _load_submission(contest_path, submission, ext='.py'):
     submission_module = None
     if ext == '.py':
         submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
-        submission_class = None
         classes = inspect.getmembers(submission_module, inspect.isclass)
         for _, cls_submission in classes:
-            if issubclass(cls_submission, Submission) and cls_submission != Submission:
+            if issubclass(cls_submission, Submission) and cls_submission != Submission and cls_submission != OldSubmission:
                 return cls_submission
     elif ext == '.js':
-        with open(submission_path) as source:
-            return SubmissionJsGenerator(source.read())
+        return SubmissionJs(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):

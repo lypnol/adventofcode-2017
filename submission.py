@@ -1,20 +1,8 @@
-from inspect import getframeinfo, stack
+"""
+Deprecated - See runners/python.py
+Backward compatibilty with previous submissions up to day 5
+"""
+from runners.python import Submission as SubmissionPy
 
-class Submission:
-
-    def __init__(self):
-        self.debug_stack = []
-
-    def language(self):
-        return 'py'
-
-    # Method that every class implementing Submssion should override
-    def run(self, input):
-        pass
-
-    def debug(self, message):
-        caller = getframeinfo(stack()[1][0])
-        self.debug_stack.append("%s:%d - %s" % (caller.filename, caller.lineno, message))
-
-    def get_debug_stack(self):
-        return self.debug_stack
+class Submission(SubmissionPy):
+    pass
