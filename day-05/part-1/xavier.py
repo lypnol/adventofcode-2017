@@ -1,5 +1,3 @@
-from array import array
-
 from submission import Submission
 
 
