@@ -27,43 +27,11 @@ def create_submission(author, path, language):
 	class_name = ''.join(x for x in "{} submission".format(author).title() if not x.isspace())
 	submission_file = os.path.join(path, author + "." + language)
 	if language == 'py':
-		submission_content = """from runners.python import Submission
-
-class {class_name}(Submission):
-
-	def run(self, s):
-		# :param s: input in string format
-		# :return: solution flag
-		# Your code goes here
-		pass
-
-""".format(class_name=class_name)
+		submission_content = open(os.path.join("templates", "template.py")).read().format(class_name=class_name)
 	elif language == 'js':
-		submission_content = """/**
- * @param {{string}} s puzzle input in string format
- * @returns solution flag
- */
-run = s => {
-	// Your code goes here
-};
-
-"""
+		submission_content = open(os.path.join("templates", "template.js")).read()
 	elif language == 'go':
-		submission_content = """package main
-
-import (
-    "fmt"
-    "os"
-)
-
-func run(s string) int {
-    // Your code goes here
-}
-
-func main() {
-    fmt.Println(run(os.Args[1]))
-}
-"""
+		submission_content = open(os.path.join("templates", "template.go")).read()
 
 	if os.path.exists(submission_file):
 		raise FileNotEmptyException("{} not empty".format(submission_file))
