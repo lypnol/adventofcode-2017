@@ -1,6 +1,14 @@
 [![Build Status](https://travis-ci.org/lypnol/adventofcode-2017.svg?branch=master)](https://travis-ci.org/lypnol/adventofcode-2017)
 # Advent of code 2017 submissions
 
+⁣    🌟  
+    🎄  
+   🎄🎄  
+  🎄⁣🎄🎄  
+ 🎄🎄🎄🎄  
+🎄🎄🎄🎄🎄  
+  🎁🎁🎁  
+
 These are proposed submissions for http://adventofcode.com/2017.
 
 The solutions are automatically tested with travis
