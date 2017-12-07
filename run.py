@@ -6,17 +6,24 @@ import traceback
 import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
-# 3p
-from tabulate import tabulate
-# project
+# submissions
 from runners.python import Submission
-from submission import Submission as OldSubmission
 from runners.js import SubmissionJs
+from runners.go import SubmissionGo
+from runners.ruby import SubmissionRb
+from runners.cpp import SubmissionCpp
+from submission import Submission as SubmissionOld
+from runners.wrapper import SubmissionWrapper
+# utils
+from tabulate import tabulate
+from utils import is_tool, tool_for_lang
 
 
 show_debug = True
 author_list = None
+language_list = None
 except_list = None
+forced_mode = False
 restricted_mode = False
 
 # To print colors in terminal
@@ -33,9 +40,11 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
-ALLOWED_EXT = ['.py', '.js']
+ALLOWED_EXT = ['.py', '.js', '.go', '.rb', '.cpp']
+SUPPORTED_LANGUAGES = [ ext[1:] for ext in ALLOWED_EXT if is_tool(tool_for_lang(ext[1:])) ]
 
-class DifferentAnswersException(Exception): pass
+class DifferentAnswersException(Exception):
+    pass
 
 def _context_name(context_path):
     return context_path.replace('/','_').replace('-','_')
@@ -64,18 +73,27 @@ def _find_submissions_for_contest(contest_path):
     return submission_files
 
 def _load_submission(contest_path, submission, ext='.py'):
+    global language_list
     if not ext in ALLOWED_EXT: return None
     submission_path = '%s/%s%s' % (contest_path, submission, ext)
     contest = _context_name(contest_path)
     submission_module = None
+    if language_list is not None and ext[1:] not in language_list:
+        return None
     if ext == '.py':
         submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
         classes = inspect.getmembers(submission_module, inspect.isclass)
         for _, cls_submission in classes:
-            if issubclass(cls_submission, Submission) and cls_submission != Submission and cls_submission != OldSubmission:
-                return cls_submission
-    elif ext == '.js':
+            if issubclass(cls_submission, Submission) and cls_submission not in (Submission, SubmissionOld, SubmissionWrapper):
+                return cls_submission()
+    elif ext == '.js' and (forced_mode or is_tool('node')):
         return SubmissionJs(submission_path)
+    elif ext == '.go' and (forced_mode or is_tool('go')):
+        return SubmissionGo(submission_path)
+    elif ext == '.rb' and (forced_mode or is_tool('ruby')):
+        return SubmissionRb(submission_path)
+    elif ext == '.cpp' and (forced_mode or is_tool('g++')):
+        return SubmissionCpp(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):
@@ -145,14 +163,13 @@ def run_submissions_for_contest(contest_path):
                 table = []
             for author, submission in submissions:
                 time_before = datetime.datetime.now()
-                submission_obj = submission()
                 if restricted_mode and author != input_author:
                     continue
                 if author_list is not None and author not in author_list:
                     continue
                 if except_list is not None and author in except_list:
                     continue
-                answer = _run_submission(author, submission_obj, input_content)
+                answer = _run_submission(author, submission, input_content)
                 time_after = datetime.datetime.now()
                 msecs = (time_after - time_before).total_seconds() * 1000
                 table.append([
@@ -160,8 +177,8 @@ def run_submissions_for_contest(contest_path):
                     "  {blue}{answer}{end}  ".format(blue=bcolors.BLUE, answer=answer, end=bcolors.ENDC),
                     "  {msecs:8.2f} ms".format(msecs=msecs)
                 ])
-                if submission_obj.language() != "py":
-                    table[-1].append(submission_obj.language())
+                if submission.language() != "py":
+                    table[-1].append(submission.language())
 
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))
@@ -199,19 +216,23 @@ def run_submissions():
 def main():
     global show_debug
     global author_list
+    global language_list
     global except_list
+    global forced_mode
     global restricted_mode
 
     day = None
     part = None
 
-    parser = argparse.ArgumentParser(description='Runs contest submissions')
-    parser.add_argument("--last", help="Runs submissions from last day", action="store_true")
-    parser.add_argument("-d", "--day", help="Runs submissions for specific day", type=int)
-    parser.add_argument("-p", "--part", help="Runs submissions for specific day part", type=int)
-    parser.add_argument("-a", "--authors", help="Runs submissions from specific authors, ex: user1,user2", type=str)
-    parser.add_argument("-i", "--ignore", help="Ignores submissions from specific authors", type=str)
-    parser.add_argument("-r", "--restricted", help="Restricts each author to their input only", action="store_true", default=False)
+    parser = argparse.ArgumentParser(description='Run contest submissions')
+    parser.add_argument("--last", help="Run submissions from last day", action="store_true")
+    parser.add_argument("-d", "--day", help="Run submissions for specific day", type=int)
+    parser.add_argument("-p", "--part", help="Run submissions for specific day part", type=int)
+    parser.add_argument("-a", "--authors", help="Run submissions from specific authors, ex: user1,user2", type=str)
+    parser.add_argument("-i", "--ignore", help="Ignore submissions from specific authors", type=str)
+    parser.add_argument("-l", "--languages", help="Run submissions written in specific languages, ex: js,py, supported: " + " ".join(SUPPORTED_LANGUAGES), type=str)
+    parser.add_argument("-f", "--force", help="Force running submissions even if tool is missing",action="store_true", default=False)
+    parser.add_argument("-r", "--restricted", help="Restrict each author to their input only", action="store_true", default=False)
     parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
     args = parser.parse_args()
 
@@ -232,6 +253,14 @@ def main():
     if args.ignore:
         except_list = args.ignore.split(',')
 
+    if args.force:
+        forced_mode = True
+
+    if args.languages:
+        language_list = args.languages.split(',')
+        if any(l not in SUPPORTED_LANGUAGES for l in language_list):
+            print(bcolors.RED, "ERROR", "Language not supported", bcolors.ENDC, file=sys.stderr)
+            sys.exit(1)
 
     if day is None and part is not None:
         for day_path in _get_days():

@@ -14,7 +14,7 @@ do
             continue;
         else
             CHANGED=("${CHANGED[@]}" "${DAY}")
-            python run.py -d $DAY;
+            python run.py -fd $DAY;
         fi
     fi
 done

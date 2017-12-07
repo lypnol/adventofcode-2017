@@ -1,22 +1,18 @@
 import subprocess, os
 from .wrapper import SubmissionWrapper
 
-class SubmissionJs(SubmissionWrapper):
+class SubmissionGo(SubmissionWrapper):
 
 	def __init__(self, file):
 		SubmissionWrapper.__init__(self)
 		self.file = file
-		self.script = """{script}
-result = run(process.argv[1]);
-console.log(result);
-""".format(script=open(file).read())
 
 	def language(self):
-		return 'js'
+		return 'go'
 
 	def exec(self, input):
 		try:
-			return subprocess.check_output(["node", "-e", self.script, input]).decode()
+			return subprocess.check_output(["go", "run", self.file, input]).decode()
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found
@@ -26,4 +22,4 @@ console.log(result);
 				return None
 
 	def __call__(self):
-		return SubmissionJs(self.file)
+		return SubmissionGo(self.file)
