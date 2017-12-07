@@ -3,6 +3,7 @@ from .wrapper import SubmissionWrapper
 import tempfile
 
 class CompilationError(Exception): pass
+class RuntimeError(Exception): pass
 
 class SubmissionCpp(SubmissionWrapper):
 
@@ -24,7 +25,7 @@ class SubmissionCpp(SubmissionWrapper):
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found
-				return None
+				return CompilationError(e)
 			else:
 				# subprocess exited with another error
-				return None
+				return RuntimeError(e)
