@@ -9,7 +9,6 @@ class MathieuSubmission(Submission):
         for program in weights:
             total_weights[program] = self.total_weights(program, weights, sons)
         wrong_programs = self.wrong_weight(total_weights, weights, sons)
-        print(wrong_programs)
         return min(wrong_programs, key=lambda x: x[0])[1]
 
     def extract(self, inputs):
