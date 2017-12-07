@@ -23,8 +23,8 @@ string run(string s) {
     while(offset >= 0 && offset < length) {
         counter++;
         old_offset = offset;
-        offset += instructions.at(offset);
-        instructions.at(old_offset)++;
+        offset += instructions[offset];
+        instructions[old_offset]++;
     }
     return to_string(counter);
 }

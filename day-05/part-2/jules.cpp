@@ -23,13 +23,13 @@ string run(string s) {
     while(offset >= 0 && offset < length) {
         counter++;
         old_offset = offset;
-        offset += instructions.at(offset);
-        if(instructions.at(old_offset) >= 3){
-            instructions.at(old_offset)--;
+        offset += instructions[offset];
+        if(instructions[old_offset] >= 3){
+            instructions[old_offset]--;
         }
         else
         {
-            instructions.at(old_offset)++;   
+            instructions[old_offset]++;
         }
     }
     return to_string(counter);
