@@ -10,9 +10,9 @@ class SubmissionGo(SubmissionWrapper):
 	def language(self):
 		return 'go'
 
-	def run(self, s):
+	def exec(self, input):
 		try:
-			return subprocess.check_output(["go", "run", self.file, s]).decode()
+			return subprocess.check_output(["go", "run", self.file, input]).decode()
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found

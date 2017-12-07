@@ -10,9 +10,9 @@ class SubmissionRb(SubmissionWrapper):
 	def language(self):
 		return 'rb'
 
-	def run(self, s):
+	def exec(self, input):
 		try:
-			return subprocess.check_output(["ruby", self.file, s]).decode()
+			return subprocess.check_output(["ruby", self.file, input]).decode()
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found
