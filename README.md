@@ -8,6 +8,7 @@ The solutions are automatically tested with travis
 ## How to use
 
 To run submissions use `run.py` script
+
 ```
 usage: run.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
               [-s]
@@ -30,11 +31,12 @@ optional arguments:
 
 ## How to contribute
 
-For now we only support `python 3` and `javascript`.
+For now we only support `python 3`, `javascript`, `go` and `ruby`.
 
 You can use `create.py` tool to create a new empty submission:
+
 ```
-usage: create.py [-h] [-p {1,2}] [-l {py,js}] author day
+usage: create.py [-h] [-p {1,2}] [-l {py,js,go,rb}] author day
 
 Creates new empty submission
 
@@ -46,19 +48,21 @@ optional arguments:
   -h, --help            show this help message and exit
   -p {1,2}, --part {1,2}
                         Create submission for one day part only
-  -l {py,js}, --language {py,js}
+  -l {py,js,go,rb}, --language {py,js,go,rb}
                         Use specified language
 ```
 
 ### Using python
 
 If you don't use `create.py` tool you should follow this convention:
-```
+
+```bash
 day-[number]/part-[number]/[your_login].py          # your submission code
 day-[number]/part-[number]/inputs/[your_login].txt  # your input file
 ```
 
 Your submission code should inherit from the `Submission` class from `submission.py` file:
+
 ```python
 from runners.python import Submission
 
@@ -74,12 +78,13 @@ You can add other functions & modules if you need to. Any external dependency sh
 ### Using javascript
 
 Similar to python, you can use `create.py` tool with the flag `-l js`, which will create the submission files.
-Your submission code should implement a function `run`
+Your submission code must implement a function `run`
+
 ```javascript
 /**
-* @param {string} s puzzle input in string format
-* @returns solution flag
-*/
+ * @param {string} s puzzle input in string format
+ * @returns solution flag
+ */
 run = s => {
   // Your code goes here
 };
@@ -88,3 +93,38 @@ run = s => {
 You can add other functions if you need to.
 Any external dependency should be installed with `npm install --save [your dependency]` to be added into `package.json` file.
 `userscorejs` is already installed.
+
+### Using go
+
+Similar to javascript, you can use `create.py` tool with the flag `-l go`, which will create the submission files.
+Your submission code must take the input as a program argument and print the integer result to stdout
+
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+)
+
+func run(s string) int {
+    // Your code goes here
+}
+
+func main() {
+    fmt.Println(run(os.Args[1]))
+}
+```
+
+### Using ruby
+
+Similar to golang, you can use `create.py` tool with the flag `-l rb`, which will create the submission files.
+Your submission code must take the input as a program argument and print the integer result to stdout
+
+```ruby
+def run(s)
+    # Your code goes here
+end
+
+puts run(ARGV)
+```

@@ -5,7 +5,8 @@ import os.path
 import sys
 
 
-class FileNotEmptyException(Exception): pass
+class FileNotEmptyException(Exception):
+	pass
 
 def mkdirp(path):
 	if not os.path.exists(path):
@@ -27,28 +28,13 @@ def create_submission(author, path, language):
 	class_name = ''.join(x for x in "{} submission".format(author).title() if not x.isspace())
 	submission_file = os.path.join(path, author + "." + language)
 	if language == 'py':
-		submission_content = """from runners.python import Submission
-
-class {class_name}(Submission):
-
-	def run(self, s):
-		# :param s: input in string format
-		# :return: solution flag
-		# your solution code goes here
-		pass
-
-""".format(class_name=class_name)
+		submission_content = open(os.path.join("templates", "template.py")).read().format(class_name=class_name)
 	elif language == 'js':
-		submission_content = """
-/**
- * @param {{string}} s puzzle input in string format
- * @returns solution flag
- */
-run = s => {
-	// Your code goes here
-};
-
-"""
+		submission_content = open(os.path.join("templates", "template.js")).read()
+	elif language == 'go':
+		submission_content = open(os.path.join("templates", "template.go")).read()
+	elif language == 'rb':
+		submission_content = open(os.path.join("templates", "template.rb")).read()
 
 	if os.path.exists(submission_file):
 		raise FileNotEmptyException("{} not empty".format(submission_file))
@@ -69,7 +55,7 @@ def main():
 	parser.add_argument('author', type=str, help='Name of author (github login)')
 	parser.add_argument('day', type=int, help='Day of problem (between 1 and 25)')
 	parser.add_argument('-p', '--part', type=int, help='Create submission for one day part only', choices=[1, 2])
-	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js"])
+	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js", "go", "rb"])
 	args = parser.parse_args()
 
 	author = args.author.lower()

@@ -1,22 +1,22 @@
 import subprocess, os
 from .wrapper import SubmissionWrapper
 
-class SubmissionJs(SubmissionWrapper):
+class SubmissionRb(SubmissionWrapper):
 
 	def __init__(self, file):
 		SubmissionWrapper.__init__(self)
 		self.file = file
-		self.script = """{script}
-result = run(process.argv[1]);
-console.log(result);
-""".format(script=open(file).read())
 
 	def language(self):
-		return 'js'
+		return 'rb'
 
-	def exec(self, input):
+	def run(self, s):
 		try:
-			return subprocess.check_output(["node", "-e", self.script, input]).decode()
+			output_raw = subprocess.check_output(["ruby", self.file, s]).decode()
+			output_rows = output_raw.split('\n')[:-1]
+			if len(output_rows) > 1:
+				print('\n'.join(output_rows[:-1]))
+			return output_rows[-1]
 		except OSError as e:
 			if e.errno == os.errno.ENOENT:
 				# executable not found
@@ -26,4 +26,4 @@ console.log(result);
 				return None
 
 	def __call__(self):
-		return SubmissionJs(self.file)
+		return SubmissionRb(self.file)

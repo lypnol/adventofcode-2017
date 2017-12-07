@@ -6,17 +6,22 @@ import traceback
 import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
-# 3p
-from tabulate import tabulate
-# project
+# submissions
 from runners.python import Submission
-from submission import Submission as OldSubmission
 from runners.js import SubmissionJs
+from runners.go import SubmissionGo
+from runners.ruby import SubmissionRb
+from submission import Submission as SubmissionOld
+from runners.wrapper import SubmissionWrapper
+# utils
+from tabulate import tabulate
+from utils import is_tool
 
 
 show_debug = True
 author_list = None
 except_list = None
+forced_mode = False
 restricted_mode = False
 
 # To print colors in terminal
@@ -33,9 +38,10 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
-ALLOWED_EXT = ['.py', '.js']
+ALLOWED_EXT = ['.py', '.js', '.go', '.rb']
 
-class DifferentAnswersException(Exception): pass
+class DifferentAnswersException(Exception):
+    pass
 
 def _context_name(context_path):
     return context_path.replace('/','_').replace('-','_')
@@ -72,10 +78,14 @@ def _load_submission(contest_path, submission, ext='.py'):
         submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
         classes = inspect.getmembers(submission_module, inspect.isclass)
         for _, cls_submission in classes:
-            if issubclass(cls_submission, Submission) and cls_submission != Submission and cls_submission != OldSubmission:
+            if issubclass(cls_submission, Submission) and cls_submission not in (Submission, SubmissionOld, SubmissionWrapper):
                 return cls_submission
-    elif ext == '.js':
+    elif ext == '.js' and (forced_mode or is_tool('node')):
         return SubmissionJs(submission_path)
+    elif ext == '.go' and (forced_mode or is_tool('go')):
+        return SubmissionGo(submission_path)
+    elif ext == '.rb' and (forced_mode or is_tool('ruby')):
+        return SubmissionRb(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):
@@ -200,18 +210,20 @@ def main():
     global show_debug
     global author_list
     global except_list
+    global forced_mode
     global restricted_mode
 
     day = None
     part = None
 
-    parser = argparse.ArgumentParser(description='Runs contest submissions')
-    parser.add_argument("--last", help="Runs submissions from last day", action="store_true")
-    parser.add_argument("-d", "--day", help="Runs submissions for specific day", type=int)
-    parser.add_argument("-p", "--part", help="Runs submissions for specific day part", type=int)
-    parser.add_argument("-a", "--authors", help="Runs submissions from specific authors, ex: user1,user2", type=str)
-    parser.add_argument("-i", "--ignore", help="Ignores submissions from specific authors", type=str)
-    parser.add_argument("-r", "--restricted", help="Restricts each author to their input only", action="store_true", default=False)
+    parser = argparse.ArgumentParser(description='Run contest submissions')
+    parser.add_argument("--last", help="Run submissions from last day", action="store_true")
+    parser.add_argument("-d", "--day", help="Run submissions for specific day", type=int)
+    parser.add_argument("-p", "--part", help="Run submissions for specific day part", type=int)
+    parser.add_argument("-a", "--authors", help="Run submissions from specific authors, ex: user1,user2", type=str)
+    parser.add_argument("-i", "--ignore", help="Ignore submissions from specific authors", type=str)
+    parser.add_argument("-f", "--force", help="Force running submissions even if tool is missing",action="store_true", default=False)
+    parser.add_argument("-r", "--restricted", help="Restrict each author to their input only", action="store_true", default=False)
     parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
     args = parser.parse_args()
 
@@ -232,6 +244,8 @@ def main():
     if args.ignore:
         except_list = args.ignore.split(',')
 
+    if args.force:
+        forced_mode = True
 
     if day is None and part is not None:
         for day_path in _get_days():
