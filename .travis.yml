@@ -5,6 +5,8 @@ node_js:
   - "8"
 go:
   - 1.9
+rvm:
+  - 2.4
 script: ./build.sh
 notifications:
   email: false

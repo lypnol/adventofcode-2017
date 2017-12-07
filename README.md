@@ -31,12 +31,12 @@ optional arguments:
 
 ## How to contribute
 
-For now we only support `python 3`, `javascript` and `go`.
+For now we only support `python 3`, `javascript`, `go` and `ruby`.
 
 You can use `create.py` tool to create a new empty submission:
 
 ```
-usage: create.py [-h] [-p {1,2}] [-l {py,js,go}] author day
+usage: create.py [-h] [-p {1,2}] [-l {py,js,go,rb}] author day
 
 Creates new empty submission
 
@@ -48,7 +48,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -p {1,2}, --part {1,2}
                         Create submission for one day part only
-  -l {py,js}, --language {py,js}
+  -l {py,js,go,rb}, --language {py,js,go,rb}
                         Use specified language
 ```
 
