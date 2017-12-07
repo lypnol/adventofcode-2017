@@ -15,11 +15,12 @@ from submission import Submission as SubmissionOld
 from runners.wrapper import SubmissionWrapper
 # utils
 from tabulate import tabulate
-from utils import is_tool
+from utils import is_tool, tool_for_lang
 
 
 show_debug = True
 author_list = None
+language_list = None
 except_list = None
 forced_mode = False
 restricted_mode = False
@@ -39,6 +40,7 @@ class bcolors:
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
 ALLOWED_EXT = ['.py', '.js', '.go', '.rb']
+SUPPORTED_LANGUAGES = [ ext[1:] for ext in ALLOWED_EXT if is_tool(tool_for_lang(ext[1:])) ]
 
 class DifferentAnswersException(Exception):
     pass
@@ -70,10 +72,13 @@ def _find_submissions_for_contest(contest_path):
     return submission_files
 
 def _load_submission(contest_path, submission, ext='.py'):
+    global language_list
     if not ext in ALLOWED_EXT: return None
     submission_path = '%s/%s%s' % (contest_path, submission, ext)
     contest = _context_name(contest_path)
     submission_module = None
+    if language_list is not None and ext[1:] not in language_list:
+        return None
     if ext == '.py':
         submission_module = imp.load_source('submission_%s_%s' % (contest, submission), submission_path)
         classes = inspect.getmembers(submission_module, inspect.isclass)
@@ -209,6 +214,7 @@ def run_submissions():
 def main():
     global show_debug
     global author_list
+    global language_list
     global except_list
     global forced_mode
     global restricted_mode
@@ -222,6 +228,7 @@ def main():
     parser.add_argument("-p", "--part", help="Run submissions for specific day part", type=int)
     parser.add_argument("-a", "--authors", help="Run submissions from specific authors, ex: user1,user2", type=str)
     parser.add_argument("-i", "--ignore", help="Ignore submissions from specific authors", type=str)
+    parser.add_argument("-l", "--languages", help="Run submissions written in specific languages, ex: js,py, supported: " + " ".join(SUPPORTED_LANGUAGES), type=str)
     parser.add_argument("-f", "--force", help="Force running submissions even if tool is missing",action="store_true", default=False)
     parser.add_argument("-r", "--restricted", help="Restrict each author to their input only", action="store_true", default=False)
     parser.add_argument("-s", "--silent", help="Disable debug mode", action="store_true")
@@ -246,6 +253,12 @@ def main():
 
     if args.force:
         forced_mode = True
+
+    if args.languages:
+        language_list = args.languages.split(',')
+        if any(l not in SUPPORTED_LANGUAGES for l in language_list):
+            print(bcolors.RED, "ERROR", "Language not supported", bcolors.ENDC, file=sys.stderr)
+            sys.exit(1)
 
     if day is None and part is not None:
         for day_path in _get_days():
