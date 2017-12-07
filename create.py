@@ -5,7 +5,8 @@ import os.path
 import sys
 
 
-class FileNotEmptyException(Exception): pass
+class FileNotEmptyException(Exception):
+	pass
 
 def mkdirp(path):
 	if not os.path.exists(path):
@@ -32,6 +33,8 @@ def create_submission(author, path, language):
 		submission_content = open(os.path.join("templates", "template.js")).read()
 	elif language == 'go':
 		submission_content = open(os.path.join("templates", "template.go")).read()
+	elif language == 'rb':
+		submission_content = open(os.path.join("templates", "template.rb")).read()
 
 	if os.path.exists(submission_file):
 		raise FileNotEmptyException("{} not empty".format(submission_file))
@@ -52,7 +55,7 @@ def main():
 	parser.add_argument('author', type=str, help='Name of author (github login)')
 	parser.add_argument('day', type=int, help='Day of problem (between 1 and 25)')
 	parser.add_argument('-p', '--part', type=int, help='Create submission for one day part only', choices=[1, 2])
-	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js", "go"])
+	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["py", "js", "go", "rb"])
 	args = parser.parse_args()
 
 	author = args.author.lower()

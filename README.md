@@ -115,3 +115,16 @@ func main() {
     fmt.Println(run(os.Args[1]))
 }
 ```
+
+### Using ruby
+
+Similar to golang, you can use `create.py` tool with the flag `-l rb`, which will create the submission files.
+Your submission code must take the input as a program argument and print the integer result to stdout
+
+```ruby
+def run(s)
+    # Your code goes here
+end
+
+puts run(ARGV)
+```
