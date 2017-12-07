@@ -21,5 +21,6 @@ class AyoubSubmission(Submission):
 				graph[parts[0]] = set()
 			else:
 				graph[parts[0]] = set(''.join(parts[3:]).split(','))
+		print(graph)
 		return self.find_root(graph)
 		
