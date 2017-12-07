@@ -26,5 +26,5 @@ run = s => {
     const errorChildIdx = _.minBy(_.range(errorNode.children.length), idx => childrenSumCount[nodes[errorNode.children[idx]].sum]);
     return nodes[errorNode.children[errorChildIdx]].weight
         - nodes[errorNode.children[errorChildIdx]].sum
-        + nodes[errorNode.children[errorChildIdx+1%errorNode.children.length]].sum;
+        + nodes[errorNode.children[(errorChildIdx + 1) % errorNode.children.length]].sum;
 };
