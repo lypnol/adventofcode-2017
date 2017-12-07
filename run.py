@@ -11,6 +11,7 @@ from runners.python import Submission
 from runners.js import SubmissionJs
 from runners.go import SubmissionGo
 from runners.ruby import SubmissionRb
+from runners.cpp import SubmissionCpp
 from submission import Submission as SubmissionOld
 from runners.wrapper import SubmissionWrapper
 # utils
@@ -39,7 +40,7 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
-ALLOWED_EXT = ['.py', '.js', '.go', '.rb']
+ALLOWED_EXT = ['.py', '.js', '.go', '.rb', '.cpp']
 SUPPORTED_LANGUAGES = [ ext[1:] for ext in ALLOWED_EXT if is_tool(tool_for_lang(ext[1:])) ]
 
 class DifferentAnswersException(Exception):
@@ -84,13 +85,15 @@ def _load_submission(contest_path, submission, ext='.py'):
         classes = inspect.getmembers(submission_module, inspect.isclass)
         for _, cls_submission in classes:
             if issubclass(cls_submission, Submission) and cls_submission not in (Submission, SubmissionOld, SubmissionWrapper):
-                return cls_submission
+                return cls_submission()
     elif ext == '.js' and (forced_mode or is_tool('node')):
         return SubmissionJs(submission_path)
     elif ext == '.go' and (forced_mode or is_tool('go')):
         return SubmissionGo(submission_path)
     elif ext == '.rb' and (forced_mode or is_tool('ruby')):
         return SubmissionRb(submission_path)
+    elif ext == '.cpp' and (forced_mode or is_tool('g++')):
+        return SubmissionCpp(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):
@@ -160,14 +163,13 @@ def run_submissions_for_contest(contest_path):
                 table = []
             for author, submission in submissions:
                 time_before = datetime.datetime.now()
-                submission_obj = submission()
                 if restricted_mode and author != input_author:
                     continue
                 if author_list is not None and author not in author_list:
                     continue
                 if except_list is not None and author in except_list:
                     continue
-                answer = _run_submission(author, submission_obj, input_content)
+                answer = _run_submission(author, submission, input_content)
                 time_after = datetime.datetime.now()
                 msecs = (time_after - time_before).total_seconds() * 1000
                 table.append([
@@ -175,8 +177,8 @@ def run_submissions_for_contest(contest_path):
                     "  {blue}{answer}{end}  ".format(blue=bcolors.BLUE, answer=answer, end=bcolors.ENDC),
                     "  {msecs:8.2f} ms".format(msecs=msecs)
                 ])
-                if submission_obj.language() != "py":
-                    table[-1].append(submission_obj.language())
+                if submission.language() != "py":
+                    table[-1].append(submission.language())
 
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))

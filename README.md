@@ -10,33 +10,36 @@ The solutions are automatically tested with travis
 To run submissions use `run.py` script
 
 ```
-usage: run.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE] [-r]
-              [-s]
+usage: run.py [-h] [--last] [-d DAY] [-p PART] [-a AUTHORS] [-i IGNORE]
+              [-l LANGUAGES] [-f] [-r] [-s]
 
-Runs contest submissions
+Run contest submissions
 
 optional arguments:
   -h, --help            show this help message and exit
-  --last                Runs submissions from last day
-  -d DAY, --day DAY     Runs submissions for specific day
-  -p PART, --part PART  Runs submissions for specific day part
+  --last                Run submissions from last day
+  -d DAY, --day DAY     Run submissions for specific day
+  -p PART, --part PART  Run submissions for specific day part
   -a AUTHORS, --authors AUTHORS
-                        Runs submissions from specific authors, ex:
-                        user1,user2
+                        Run submissions from specific authors, ex: user1,user2
   -i IGNORE, --ignore IGNORE
-                        Ignores submissions from specific authors
-  -r, --restricted      Restricts each author to their input only
+                        Ignore submissions from specific authors
+  -l LANGUAGES, --languages LANGUAGES
+                        Run submissions written in specific languages, ex:
+                        js,py, supported: py js go rb cpp
+  -f, --force           Force running submissions even if tool is missing
+  -r, --restricted      Restrict each author to their input only
   -s, --silent          Disable debug mode
 ```
 
 ## How to contribute
 
-For now we only support `python 3`, `javascript`, `go` and `ruby`.
+For now we support `c++`, `python 3`, `javascript`, `go` and `ruby`.
 
 You can use `create.py` tool to create a new empty submission:
 
 ```
-usage: create.py [-h] [-p {1,2}] [-l {py,js,go,rb}] author day
+usage: create.py [-h] [-p {1,2}] [-l {cpp,py,js,go,rb}] author day
 
 Creates new empty submission
 
@@ -48,7 +51,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -p {1,2}, --part {1,2}
                         Create submission for one day part only
-  -l {py,js,go,rb}, --language {py,js,go,rb}
+  -l {cpp,py,js,go,rb}, --language {cpp,py,js,go,rb}
                         Use specified language
 ```
 
@@ -61,7 +64,7 @@ day-[number]/part-[number]/[your_login].py          # your submission code
 day-[number]/part-[number]/inputs/[your_login].txt  # your input file
 ```
 
-Your submission code should inherit from the `Submission` class from `submission.py` file:
+Your submission code should inherit from the `Submission` class from `runners.python` module:
 
 ```python
 from runners.python import Submission
@@ -74,57 +77,3 @@ class MyAwesomeSubmission(Submission):
 ```
 
 You can add other functions & modules if you need to. Any external dependency should be added to `requirements.txt`.
-
-### Using javascript
-
-Similar to python, you can use `create.py` tool with the flag `-l js`, which will create the submission files.
-Your submission code must implement a function `run`
-
-```javascript
-/**
- * @param {string} s puzzle input in string format
- * @returns solution flag
- */
-run = s => {
-  // Your code goes here
-};
-```
-
-You can add other functions if you need to.
-Any external dependency should be installed with `npm install --save [your dependency]` to be added into `package.json` file.
-`userscorejs` is already installed.
-
-### Using go
-
-Similar to javascript, you can use `create.py` tool with the flag `-l go`, which will create the submission files.
-Your submission code must take the input as a program argument and print the integer result to stdout
-
-```go
-package main
-
-import (
-    "fmt"
-    "os"
-)
-
-func run(s string) int {
-    // Your code goes here
-}
-
-func main() {
-    fmt.Println(run(os.Args[1]))
-}
-```
-
-### Using ruby
-
-Similar to golang, you can use `create.py` tool with the flag `-l rb`, which will create the submission files.
-Your submission code must take the input as a program argument and print the integer result to stdout
-
-```ruby
-def run(s)
-    # Your code goes here
-end
-
-puts run(ARGV)
-```

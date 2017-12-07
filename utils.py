@@ -12,4 +12,6 @@ def tool_for_lang(lang):
         return 'go'
     elif lang == 'rb':
         return 'ruby'
+    elif lang == 'cpp':
+        return 'g++'
     return lang
