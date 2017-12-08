@@ -1,5 +1,4 @@
 from runners.python import Submission
-from re import match
 
 class XavierSubmission(Submission):
 
