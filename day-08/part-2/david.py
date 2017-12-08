@@ -26,6 +26,8 @@ class DavidSubmission(Submission):
 		# :param s: input in string format
 		# :return: solution flag
 		# Your code goes here
+		self.register = defaultdict(int)
+		self.highest_value = -float("inf")
 
 		for line in s.split("\n"):
 			var, op, value, cond_var, cond_type, cond_value = self.process_line(line)
