@@ -11,7 +11,7 @@ class LoicSubmission(Submission):
 		for line in s.split("\n"):
 			data = line.split()
 			check = False
-			
+
 			if data[5] == "<":
 				if self.get(data[4]) < int(data[6]):
 					check = True
@@ -41,7 +41,7 @@ class LoicSubmission(Submission):
 
 		return max
 
-	def get(self,key):
+	def get(self, key):
 		if key not in self.memory:
 			self.memory[key] = 0
 			return 0
