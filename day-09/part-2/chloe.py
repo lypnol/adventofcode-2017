@@ -10,17 +10,19 @@ class ChloeSubmission(Submission):
 
 		for character in s:
 
-			if character == ">" and is_garbage and not is_mute :
-				is_garbage = False
+			if not is_mute:
 
-			if is_garbage and not is_mute and character != "!":
-				nb_char += 1
+				if character == ">" and is_garbage:
+					is_garbage = False
 
-			if character == "<" and not is_garbage and not is_mute:
-				is_garbage = True
+				if character != "!" and is_garbage:
+					nb_char += 1
 
-			if character == "!" and not is_mute:
-				is_mute = True
+				if character == "<" and not is_garbage:
+					is_garbage = True
+
+				if character == "!":
+					is_mute = True
 			else:
 				is_mute = False
 
