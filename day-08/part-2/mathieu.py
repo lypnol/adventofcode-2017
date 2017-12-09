@@ -24,6 +24,7 @@ class MathieuSubmission(Submission):
                 execution+=line[2]
                 exec(execution)
 
-                max_val=max(max_val,variables[var])
+                if max_val<variables[var]:
+                    max_val=variables[var]
 
         return max_val
