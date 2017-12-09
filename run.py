@@ -7,11 +7,12 @@ import glob, sys, imp, inspect, datetime, re
 import os.path
 from os import walk
 # submissions
-from runners.python import Submission
-from runners.js import SubmissionJs
-from runners.go import SubmissionGo
-from runners.ruby import SubmissionRb
+from runners.c import SubmissionC
 from runners.cpp import SubmissionCpp
+from runners.go import SubmissionGo
+from runners.js import SubmissionJs
+from runners.python import Submission
+from runners.ruby import SubmissionRb
 from submission import Submission as SubmissionOld
 from runners.wrapper import SubmissionWrapper
 # utils
@@ -40,7 +41,7 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
-ALLOWED_EXT = ['.py', '.js', '.go', '.rb', '.cpp']
+ALLOWED_EXT = ['.c', '.cpp', '.go', '.js', '.py', '.rb']
 SUPPORTED_LANGUAGES = [ ext[1:] for ext in ALLOWED_EXT if is_tool(tool_for_lang(ext[1:])) ]
 
 class DifferentAnswersException(Exception):
@@ -86,14 +87,16 @@ def _load_submission(contest_path, submission, ext='.py'):
         for _, cls_submission in classes:
             if issubclass(cls_submission, Submission) and cls_submission not in (Submission, SubmissionOld, SubmissionWrapper):
                 return cls_submission()
-    elif ext == '.js' and (forced_mode or is_tool('node')):
-        return SubmissionJs(submission_path)
-    elif ext == '.go' and (forced_mode or is_tool('go')):
-        return SubmissionGo(submission_path)
-    elif ext == '.rb' and (forced_mode or is_tool('ruby')):
-        return SubmissionRb(submission_path)
+    elif ext == '.c' and (forced_mode or is_tool('gcc')):
+        return SubmissionC(submission_path)
     elif ext == '.cpp' and (forced_mode or is_tool('g++')):
         return SubmissionCpp(submission_path)
+    elif ext == '.go' and (forced_mode or is_tool('go')):
+        return SubmissionGo(submission_path)
+    elif ext == '.js' and (forced_mode or is_tool('node')):
+        return SubmissionJs(submission_path)
+    elif ext == '.rb' and (forced_mode or is_tool('ruby')):
+        return SubmissionRb(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):
@@ -177,8 +180,7 @@ def run_submissions_for_contest(contest_path):
                     "  {blue}{answer}{end}  ".format(blue=bcolors.BLUE, answer=answer, end=bcolors.ENDC),
                     "  {msecs:8.2f} ms".format(msecs=msecs)
                 ])
-                if submission.language() != "py":
-                    table[-1].append(submission.language())
+                table[-1].append(submission.language())
 
                 if prev_ans != None and prev_ans != str(answer):
                     raise DifferentAnswersException("we don't agree for {}".format(contest_path))
