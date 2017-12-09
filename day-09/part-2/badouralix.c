@@ -7,20 +7,26 @@ const int run(char* s)
     bool garbage = false;
 
     for (char* c = --s; *++c != '\0';) {
-        switch (*c) {
-        case '!':
-            c++;
-            break;
-        case '<':
-            if (garbage) counter++;
-            else garbage = true;
-            break;
-        case '>':
-            garbage = false;
-            break;
-        default:
-            if (garbage) counter++;
-            break;
+        if (garbage) {
+            switch (*c) {
+            case '!':
+                c++;
+                break;
+            case '>':
+                garbage = false;
+                break;
+            default:
+                counter++;
+                break;
+            }
+        } else {
+            switch (*c) {
+            case '<':
+                garbage = true;
+                break;
+            default:
+                break;
+            }
         }
     }
 
