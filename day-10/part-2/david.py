@@ -39,7 +39,7 @@ class DavidSubmission(Submission):
 		return [xor(self.lst[16*k:16*(k+1)]) for k in range(16)]
 
 	def hexa(self, value):
-		return format(value, 'x')
+		return format(value, '02x')
 
 	def run_round(self, lengths):
 		n = self.n
