@@ -4,14 +4,16 @@ def is_tool(name):
     return which(name) is not None
 
 def tool_for_lang(lang):
-    if lang == 'py':
-        return 'python'
-    elif lang == 'js':
-        return 'node'
-    elif lang == 'go':
-        return 'go'
-    elif lang == 'rb':
-        return 'ruby'
+    if lang == 'c':
+        return 'gcc'
     elif lang == 'cpp':
         return 'g++'
+    elif lang == 'go':
+        return 'go'
+    elif lang == 'js':
+        return 'node'
+    elif lang == 'py':
+        return 'python'
+    elif lang == 'rb':
+        return 'ruby'
     return lang
