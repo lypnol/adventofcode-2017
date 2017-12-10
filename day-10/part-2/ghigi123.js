@@ -33,7 +33,7 @@ run = s => {
         chunk => _.reduce(chunk, (a, i) => a ^ i, 0)
     );
     return _.join(
-        _.map(xoredHash, n => n.toString(16))
+        _.map(xoredHash, n => ('0' + n.toString(16)).slice(-2))
         , ''
     );
 };
