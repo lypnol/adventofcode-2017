@@ -29,4 +29,4 @@ class MathieuSubmission(Submission):
 
         dense_hashes = [reduce(lambda x, y: x ^ y, numbers[16 * i:16 * (i + 1)]) for i in range(16)]
 
-        return ''.join(map(lambda x: hex(x)[2:], dense_hashes))
+        return ''.join(map(lambda x: hex(x)[2:].zfill(2), dense_hashes))
