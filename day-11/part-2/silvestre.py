@@ -4,7 +4,7 @@ class SilvestreSubmission(Submission):
 
     def run(self, s):
         """
-        clairement inspiré de xavier, j'ai pris un autre référentiel et une autre formule pour la forme
+        clairement inspiré du site de xavier, j'ai pris un autre référentiel et une autre formule pour la forme
         """
         instructions = s.split(",")
         max_distance = 0
