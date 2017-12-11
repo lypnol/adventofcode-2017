@@ -3,6 +3,7 @@ from collections import Counter
 
 
 class XavierSubmission(Submission):
+	"""Thanks to https://www.redblobgames.com/grids/hexagons"""
 	def run(self, input):
 		count = Counter(input.split(","))
 		v_axis = count["n"] - count["s"]
