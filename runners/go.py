@@ -1,8 +1,8 @@
-import subprocess, os, stat, os.path
+import subprocess, os, stat
 from .wrapper import SubmissionWrapper
 import tempfile
 
-class DependeciesError(Exception): pass
+class DependenciesError(Exception): pass
 class CompilationError(Exception): pass
 class RuntimeError(Exception): pass
 
@@ -10,9 +10,9 @@ class SubmissionGo(SubmissionWrapper):
 
 	def __init__(self, file):
 		SubmissionWrapper.__init__(self)
-		dep_output = subprocess.check_output(["go", "get", "-d", os.path.join(".", os.path.dirname(file))]).decode()
+		dep_output = subprocess.check_output(["go", "get", "-d", os.path.join(".", file)]).decode()
 		if dep_output:
-			raise DependeciesError(dep_output)
+			raise DependenciesError(dep_output)
 		tmp = tempfile.NamedTemporaryFile(prefix="aoc")
 		tmp.close()
 		compile_output = subprocess.check_output(["go", "build", "-o", tmp.name, file]).decode()
