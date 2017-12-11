@@ -3,8 +3,8 @@
 #include <string.h>
 
 #define circle_size 256
-#define a *(circle + (current_position + i) % circle_size)
-#define b *(circle + (current_position + length - 1 - i) % circle_size)
+#define m *(circle + (current_position + i) % circle_size)
+#define n *(circle + (current_position + length - 1 - i) % circle_size)
 
 const int run(char* s)
 {
@@ -21,7 +21,7 @@ const int run(char* s)
     do {
         length = atoi(token);
         for (int i = 0; 2*i + 1 < length; i++) {
-            a ^= b ^= a ^= b;
+            (m ^= n), (n ^= m), (m ^= n);
         }
         current_position = (current_position + length + skip_size) % circle_size;
         skip_size++;

@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 #define circle_size 256
-#define a *(circle + (*current_position + i) % circle_size)
-#define b *(circle + (*current_position + length - 1 - i) % circle_size)
+#define m *(circle + (*current_position + i) % circle_size)
+#define n *(circle + (*current_position + length - 1 - i) % circle_size)
 
 void run_round(int* circle, const int* lengths, const int lengths_size, int* current_position, int* skip_size)
 {
@@ -12,7 +12,7 @@ void run_round(int* circle, const int* lengths, const int lengths_size, int* cur
     for (int i = 0; i != lengths_size; i++) {
         length = lengths[i];
         for (int i = 0; 2*i + 1 < length; i++) {
-            a ^= b ^= a ^= b;
+            (m ^= n), (n ^= m), (m ^= n);
         }
         *current_position = (*current_position + length + *skip_size) % circle_size;
         (*skip_size)++;
