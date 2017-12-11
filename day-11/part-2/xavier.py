@@ -15,15 +15,15 @@ class XavierSubmission(Submission):
 				z += 1
 			elif mv == "sw":
 				x += 1
-				z -= 1
+				z += 1
 			elif mv == "ne":
 				x -= 1
-				z += 1
+				z -= 1
 			elif mv == "nw":
-				x -= 1
+				x += 1
 				y += 1
 			else:
-				x += 1
+				x -= 1
 				y -= 1
-			distances.append((abs(x) + abs(y) + abs(z)) / 2)
+			distances.append((abs(x) + abs(y) + abs(z)) // 2)
 		return max(distances)
