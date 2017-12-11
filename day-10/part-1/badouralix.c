@@ -25,7 +25,7 @@ const int run(char* s)
         }
         current_position = (current_position + length + skip_size) % circle_size;
         skip_size++;
-    } while (token = strtok(NULL, delimiters));
+    } while ((token = strtok(NULL, delimiters)) != NULL);
 
     return circle[0] * circle[1];
 }
