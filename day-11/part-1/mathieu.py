@@ -14,4 +14,4 @@ class MathieuSubmission(Submission):
                 n_pos += 1
             elif char == "s":
                 n_pos -= 1
-        return max(abs(n_pos),abs(e_pos)
+        return max(abs(n_pos),abs(e_pos))
