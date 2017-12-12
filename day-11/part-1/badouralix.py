@@ -7,38 +7,26 @@ class BadouralixSubmission(Submission):
         # :param s: input in string format
         # :return: solution flag
         steps = Counter(s.split(','))
+        group_law = [
+            ('n',  's',  ''),
+            ('ne', 'sw', ''),
+            ('nw', 'se', ''),
+            ('n',  'sw', 'nw'),
+            ('n',  'se', 'ne'),
+            ('s',  'nw', 'sw'),
+            ('s',  'ne', 'se'),
+            ('ne', 'nw', 'n'),
+            ('se', 'sw', 's'),
+        ]
         reducible = True
 
         while reducible:
-            if steps['n'] > 0 and steps['s'] > 0:
-                iterations = min(steps['n'], steps['s'])
-                steps -= Counter(n=iterations, s=iterations)
-            elif steps['ne'] > 0 and steps['sw'] > 0:
-                iterations = min(steps['ne'], steps['sw'])
-                steps -= Counter(ne=iterations, sw=iterations)
-            elif steps['nw'] > 0 and steps['se'] > 0:
-                iterations = min(steps['nw'], steps['se'])
-                steps -=  Counter(nw=iterations, se=iterations)
-            elif steps['n'] > 0 and steps['sw'] > 0:
-                iterations = min(steps['n'], steps['sw'])
-                steps -=  Counter(n=iterations, sw=iterations, nw=-iterations)
-            elif steps['n'] > 0 and steps['se'] > 0:
-                iterations = min(steps['n'], steps['se'])
-                steps -=  Counter(n=iterations, se=iterations, ne=-iterations)
-            elif steps['s'] > 0 and steps['nw'] > 0:
-                iterations = min(steps['s'], steps['nw'])
-                steps -=  Counter(s=iterations, nw=iterations, sw=-iterations)
-            elif steps['s'] > 0 and steps['ne'] > 0:
-                iterations = min(steps['s'], steps['ne'])
-                steps -=  Counter(s=iterations, ne=iterations, se=-iterations)
-            elif steps['ne'] > 0 and steps['nw'] > 0:
-                iterations = min(steps['ne'], steps['nw'])
-                steps -=  Counter(ne=iterations, nw=iterations, n=-iterations)
-            elif steps['se'] > 0 and steps['sw'] > 0:
-                iterations = min(steps['se'], steps['sw'])
-                steps -=  Counter(se=iterations, sw=iterations, s=-iterations)
-            else:
-                reducible = False
+            reducible = False
+            for action in group_law:
+                if steps[action[0]] > 0 and steps[action[1]] > 0:
+                    reducible = True
+                    iterations = min(steps[action[0]], steps[action[1]])
+                    steps -= Counter({action[0]:iterations, action[1]:iterations, action[2]:-iterations})
 
-        # print(steps)
+        del steps['']
         return sum(steps.values())
