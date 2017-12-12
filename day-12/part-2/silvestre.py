@@ -10,9 +10,11 @@ class SilvestreSubmission(Submission):
         
         visited = set()
         n = 0
-        while len(visited) < len(programs):
+        for key in programs:
+            if key in visited:
+                continue
             to_visit = set()
-            to_visit.add([x for x in programs.keys() if x not in visited][0])
+            to_visit.add(key)
             while len(to_visit) > 0:
                 current_p = to_visit.pop()
                 for program in programs[current_p]:
