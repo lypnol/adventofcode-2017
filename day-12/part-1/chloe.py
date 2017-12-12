@@ -1,0 +1,43 @@
+from runners.python import Submission
+
+class ChloeSubmission(Submission):
+
+	def run(self, s):
+		liste = s.split("\n")
+		dico = {}
+		groupe = set()
+		for element in liste:
+			dico[element.split(' <-> ')[0]] = set(element.split(' <-> ')[1].split(', '))
+		value = '0'
+		a_traiter = {'0'}
+		groupe.add(value)
+
+		while len(a_traiter) > 0:
+			value = a_traiter.pop()
+			nouveaux_a_traiter = set(dico[value]).difference(groupe)
+			a_traiter = a_traiter.union(nouveaux_a_traiter)
+			groupe = groupe.union(set(dico[value]))
+		return(len(groupe))
+
+
+if __name__ == '__main__':
+	s = "0 <-> 2\n1 <-> 1\n2 <-> 0, 3, 4\n3 <-> 2, 4\n4 <-> 2, 3, 6\n5 <-> 6\n6 <-> 4, 5"
+	print(ChloeSubmission().run(s))
+	"""liste = s.split("\n")
+	dico = {}
+	groupe = set()
+	for element in liste:
+		dico[element.split(' <-> ')[0]] = set(element.split(' <-> ')[1].split(', '))
+	value = '0'
+	a_traiter = {'0'}
+	groupe.add(value)
+	i = 0
+
+	while len(a_traiter) > 0:
+		value = a_traiter.pop()
+		a_traiter = (a_traiter.union(set(dico[value]))).difference(groupe)
+		groupe = groupe.union(set(dico[value]))
+	print(groupe)
+	print(len(groupe))"""
+
+
