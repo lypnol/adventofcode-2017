@@ -3,24 +3,32 @@ from submission import Submission
 class SilvestreSubmission(Submission):
 
     def run(self, s):
-        layers = {}
-        for line in s.split("\n"):
-            parts = line.split(": ")
-            layers[int(parts[0])] = int(parts[1])
-            max_depth = int(parts[0])
-        
         """
-        a layer of layers is :
-            0 (depth) : 3 (range)                
+        Ceci est une tentative d'optimisation de l'algo de Mathieu.                
         """
+        layers = [(int(x.split(': ')[0]), int(x.split(': ')[1])) for x in s.split('\n')]
+
+        #Number of smallest elements targeted
+        x = 3
+
+        smallest_l = []
+        layers_c = layers.copy()
+        layers_c = sorted(layers_c, key= lambda x: -x[1])
+        for i in range(x):
+            smallest_l.append(layers_c.pop())
         caught = True
-        waiting_time = 0
+        delay = 0
         while caught:
+            
+            for layer, r in smallest_l:
+                if (delay - layer) % ((r -1) * 2) == 0:
+                    delay += 1
+                    break
+            
             caught = False
-            for layer in layers.items():
-                c_time = layer[0] + waiting_time
-                if c_time % (2*(layer[1]-1)) == 0:
-                        caught = True
-                        waiting_time += 1
-                        break
-        return waiting_time
+            for layer, depth in layers:
+                if (delay + layer) % (2 * depth - 2) == 0:
+                    caught = True
+                    delay += 1
+                    break
+        return delay
