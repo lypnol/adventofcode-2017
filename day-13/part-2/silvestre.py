@@ -9,7 +9,7 @@ class SilvestreSubmission(Submission):
         layers = [(int(x.split(': ')[0]), int(x.split(': ')[1])) for x in s.split('\n')]
 
         #Number of smallest elements targeted
-        x = 5
+        x = 4
 
         smallest_l = []
         layers_c = layers.copy()
