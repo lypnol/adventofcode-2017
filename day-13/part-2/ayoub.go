@@ -8,9 +8,10 @@ import (
 )
 
 func run(s string) string {
+	lines := strings.Split(s, "\n")
 	for x := 0; ; x++ {
 		caught := false
-		for _, line := range strings.Split(s, "\n") {
+		for _, line := range lines {
 			parts := strings.Split(line, ": ")
 			idx, _ := strconv.Atoi(parts[0])
 			depth, _ := strconv.Atoi(parts[1])
