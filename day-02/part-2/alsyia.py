@@ -9,7 +9,6 @@ class AlsyiaSubmission(Submission):
 		def findLineResult(line):
 			for idx, i in enumerate(line[:-1]):
 				for j in line[idx:]:
-					print(i, j)
 					if (i > j and i % j == 0):
 						return i // j
 					elif (j > i and j % i == 0):
