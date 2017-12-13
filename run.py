@@ -13,6 +13,7 @@ from runners.go import SubmissionGo
 from runners.js import SubmissionJs
 from runners.python import Submission
 from runners.ruby import SubmissionRb
+from runners.rust import SubmissionRs
 from submission import Submission as SubmissionOld
 from runners.wrapper import SubmissionWrapper
 # utils
@@ -41,7 +42,7 @@ class bcolors:
 
 DAY_PATH_PATTERN  = 'day-[0-9]*'
 CONTEST_PATH_PATTERN = 'part-[0-9]*'
-ALLOWED_EXT = ['.c', '.cpp', '.go', '.js', '.py', '.rb']
+ALLOWED_EXT = ['.c', '.cpp', '.go', '.js', '.py', '.rb', '.rs']
 SUPPORTED_LANGUAGES = [ ext[1:] for ext in ALLOWED_EXT if is_tool(tool_for_lang(ext[1:])) ]
 
 class DifferentAnswersException(Exception):
@@ -97,6 +98,8 @@ def _load_submission(contest_path, submission, ext='.py'):
         return SubmissionJs(submission_path)
     elif ext == '.rb' and (forced_mode or is_tool('ruby')):
         return SubmissionRb(submission_path)
+    elif ext == '.rs' and (forced_mode or is_tool('cargo')):
+        return SubmissionRs(submission_path)
     return None
 
 def load_submissions_for_contest(contest_path):
