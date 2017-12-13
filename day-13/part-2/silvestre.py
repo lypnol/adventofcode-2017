@@ -13,9 +13,8 @@ class SilvestreSubmission(Submission):
 
         smallest_l = []
         layers_c = layers.copy()
-        layers_c = sorted(layers_c, key= lambda x: -x[1])
-        for i in range(x):
-            smallest_l.append(layers_c.pop())
+        smallest_l = sorted(layers_c, key= lambda x: x[1])[:x]
+
         caught = True
         delay = 0
         while caught:
