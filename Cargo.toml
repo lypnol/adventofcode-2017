@@ -4,3 +4,11 @@ version = "0.1.0"
 authors = ["Rémi Garde <remi.garde@free.fr>"]
 
 [dependencies]
+
+[[bin]]
+name = "day-14-part-1-enizor"
+path = "./day-14/part-1/enizor.rs"
+
+[[bin]]
+name = "day-14-part-2-enizor"
+path = "./day-14/part-2/enizor.rs"
