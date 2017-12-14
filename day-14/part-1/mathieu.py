@@ -5,8 +5,8 @@ from functools import reduce
 class MathieuSubmission(Submission):
 
     @staticmethod
-    def knot_hash(s):
-        lengths = list(ord(x) for x in s) + [17, 31, 73, 47, 23]
+    def knot_hash_bin(s):
+        lengths = list(map(ord,s)) + [17, 31, 73, 47, 23]
         n = 256
         numbers = list(range(n))
         rounds = 64
@@ -29,14 +29,12 @@ class MathieuSubmission(Submission):
             round_nb += 1
 
         dense_hashes = [reduce(lambda x, y: x ^ y, numbers[16 * i:16 * (i + 1)]) for i in range(16)]
-
-        return ''.join(map(lambda x: hex(x)[2:].zfill(2), dense_hashes))
+        return ''.join(map(lambda x: bin(x)[2:].zfill(8), dense_hashes))
 
     def run(self, s):
         n = 128
         square_used = 0
         for i in range(n):
             input_key = s + "-" + str(i)
-            output_hash = self.knot_hash(input_key)
-            square_used += bin(int(output_hash, 16))[:2].count("1")
+            square_used += self.knot_hash_bin(input_key).count("1")
         return square_used
