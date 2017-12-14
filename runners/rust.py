@@ -17,7 +17,7 @@ class SubmissionRs(SubmissionWrapper):
 			subprocess.check_output(
 				["cargo", "test", "--bin", file.replace('/', '-')[:-3]], stderr=DEVNULL).decode()
 		except subprocess.CalledProcessError as e:
-			print(e.output)
+			raise CompilationError(e.output)
 
 		e = subprocess.Popen(["cargo", "build", "--release", "--bin", file.replace(
                     '/', '-')[:-3]], env={**os.environ, "CARGO_TARGET_DIR": tmpdir.name}, stdout=DEVNULL, stderr=DEVNULL).wait()
