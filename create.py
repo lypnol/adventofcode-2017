@@ -31,11 +31,17 @@ def create_submission(author, path, language):
 		submission_content = open(os.path.join("templates", "template.py")).read().format(class_name=class_name)
 	else:
 		submission_content = open(os.path.join("templates", "template."+language)).read()
-
+	# Create an entry in Cargo.toml if its a Rust Project
 	if os.path.exists(submission_file):
 		raise FileNotEmptyException("{} not empty".format(submission_file))
 	with open(submission_file, 'w') as f:
 		f.write(submission_content)
+	if language == "rs":
+		submission_path = path + "/" + author + "." + language
+		submission_name = path[2:].replace('/','-') + "-" + author
+		cargo = open(os.path.join("Cargo.toml"),"a")
+		cargo.write('\n[[bin]]\nname = "'+submission_name+'"\npath = "'+submission_path+'"\n')
+		print("Added submission to Cargo.toml")
 	print("created "+submission_file)
 
 def create_input(author, path):
@@ -51,7 +57,7 @@ def main():
 	parser.add_argument('author', type=str, help='Name of author (github login)')
 	parser.add_argument('day', type=int, help='Day of problem (between 1 and 25)')
 	parser.add_argument('-p', '--part', type=int, help='Create submission for one day part only', choices=[1, 2])
-	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["c", "cpp", "go", "js", "py", "rb"])
+	parser.add_argument('-l', '--language', help='Use specified language', default="py", choices=["c", "cpp", "go", "js", "py", "rb", "rs"])
 	args = parser.parse_args()
 
 	author = args.author.lower()

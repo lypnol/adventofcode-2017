@@ -1,12 +1,11 @@
 language: python
 python:
   - "3.6"
-node_js:
-  - "8"
-go:
-  - 1.9
-rvm:
-  - 2.4
+before_install:
+ - curl https://sh.rustup.rs -sSf -o rustup.sh
+ - sh rustup.sh -y
+ - export PATH=$PATH:~/.cargo/bin
+ - rustc --version
 script: ./build.sh
 notifications:
   email: false

@@ -16,4 +16,6 @@ def tool_for_lang(lang):
         return 'python'
     elif lang == 'rb':
         return 'ruby'
+    elif lang == 'rs':
+        return 'cargo'
     return lang
