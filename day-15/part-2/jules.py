@@ -12,12 +12,6 @@ class JulesSubmission(Submission):
         score = 0
         while i < 5000000:
             i += 1
-            a = (a * genA) % n
-            while a % 4 != 0:
-                a = (a * genA) % n
-            b = (b * genB) % n
-            while b % 8 != 0:
-                b = (b * genB) % n
             if (a & 0xffff) == (b & 0xffff):
                 score += 1
         return score
