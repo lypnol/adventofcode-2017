@@ -15,10 +15,10 @@ const int run(char* s)
         i++;
         do {
             a = (a * genA) % n;
-        } while ((a & 0x4) != 0);
+        } while ((a & 0x3) != 0);
         do {
             b = (b * genB) % n;
-        } while ((b & 0x8) != 0);
+        } while ((b & 0x7) != 0);
         if((a & 0xffff) == (b & 0xffff)) {
             score++;
         }
