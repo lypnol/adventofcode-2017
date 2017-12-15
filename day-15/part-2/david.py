@@ -27,7 +27,7 @@ class DavidSubmission(Submission):
 
 
 
-		return sum((1 if a%65536==b%65536 else 0) for a,b in generate(start_a, start_b, 5000000))
+		return sum((1 if (a & 0xffff)==(b & 0xffff) else 0) for a,b in generate(start_a, start_b, 5000000))
 
 
 
