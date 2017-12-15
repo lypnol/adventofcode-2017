@@ -9,7 +9,6 @@ class MathieuSubmission(Submission):
         for val_a, val_b in self.generator(start_a, start_b):
             bin_a = bin(val_a)[2:].zfill(32)[16:]
             bin_b = bin(val_b)[2:].zfill(32)[16:]
-            print(bin_a, bin_b)
             if bin_a == bin_b:
                 count += 1
         return count
@@ -18,7 +17,7 @@ class MathieuSubmission(Submission):
         pairs = 0
         val_a = start_a
         val_b = start_b
-        while pairs < 5:
+        while pairs < 40000000:
             val_a = (val_a * 16807) % 2147483647
             val_b = (val_b * 48271) % 2147483647
             pairs += 1
