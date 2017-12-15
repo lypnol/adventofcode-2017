@@ -5,67 +5,35 @@ from collections import defaultdict
 
 class DavidSubmission(Submission):
 
-	def __init__(self):
-		super().__init__()
-		self.pos = None
-		self.skip_size = None
-		self.lst = None
-		self.n = None
-
 	def compute_hash(self, value):
-		self.n = 256
-		self.lst = list(range(self.n))
-		input = [ord(x) for x in value]
-		lengths = input + [17, 31, 73, 47, 23]
+		n = 256
+		lst = list(range(n))
+		lenghts = [ord(x) for x in value] + [17, 31, 73, 47, 23]
 
-		self.pos = 0 # current position index
-		self.skip_size = 0
+		pos = 0 # current position index
+		skip_size = 0
 
 		# 64 rounds
 		for _ in range(64):
-			self.run_round(lengths)
+			for length in lenghts:
+				i,j = (pos, pos+length-1)
 
-		dense_hash = [self.hexa(x) for x in self.compute_dense_hash()]
+				for k in range(length//2):
+					# swap lst[(j-k)%n] and lst[(i+k)%n]
+					lst[(j-k)%n], lst[(i+k)%n] = lst[(i+k)%n], lst[(j-k)%n]
 
-		return "".join(dense_hash)
+				pos = (pos + length + skip_size) % n
+				skip_size += 1
 
-	def hexa_to_bin(self, value):
-		return "{0:04b}".format(int(value, 16))
-
-
-	def compute_dense_hash(self):
-		# xor elements in a list
 		def xor(l):
 			return reduce(operator.xor, l, 0)
 
-		return [xor(self.lst[16*k:16*(k+1)]) for k in range(16)]
+		return "".join(["{0:08b}".format(x) for x in [xor(lst[16*k:16*(k+1)]) for k in range(16)]])
 
-	def hexa(self, value):
-		return format(value, '02x')
-
-	def run_round(self, lengths):
-		n = self.n
-
-		for length in lengths:
-			i = self.pos
-			j = (self.pos+length-1)
-
-			for k in range(length//2):
-				tmp = self.lst[(j-k)%n]
-				self.lst[(j-k)%n] = self.lst[(i+k)%n]
-				self.lst[(i+k)%n] = tmp
-
-			self.pos = (self.pos + length + self.skip_size) % n
-			self.skip_size += 1
 
 	def neighbors(self, pos):
-		def is_correct(pos):
-			x, y = pos
-			return x >= 0 and y >= 0 and x < 128 and y < 128
-
 		x,y = pos
-		return [p for p in [(x-1,y), (x+1,y), (x,y-1), (x,y+1)] if is_correct(p)]
-
+		return [p for p in [(x-1,y), (x+1,y), (x,y-1), (x,y+1)]]
 
 
 	def run(self, s):
@@ -75,38 +43,26 @@ class DavidSubmission(Submission):
 
 		graph = defaultdict(set)
 		hashes = [self.compute_hash("{}-{}".format(s, str(i))) for i in range(128)]
-
-		count_ones = 0
-		for i, full_hash in enumerate(hashes):
-			for j, h in enumerate(full_hash):
-				for k, b in enumerate(self.hexa_to_bin(h)):
-					node = (i,4*j+k)
-					if b == "1":
-						count_ones += 1
-						if node not in graph:
-							graph[node] = set()
-
-						for neighbor in self.neighbors(node):
-							if not neighbor in graph or not graph[neighbor] == False:
-								graph[neighbor].add(node)
-					else:
-						graph[node] = False
-
+		to_visit = set()
+		for i, bits in enumerate(hashes):
+			for j, b in enumerate(bits):
+				node = (i,j)
+				if b == "1":
+					to_visit.add(node)
+					for neighbor in self.neighbors(node):
+						graph[neighbor].add(node)
 
 		counter = 0
-		visited = [False] * count_ones
-		ones = [k for k in graph.keys() if not graph[k] == False]
-		reversed_ones = {v:k for k,v in enumerate(ones)}
 
-		while not all(visited):
+		while to_visit:
 			counter += 1
-			root = ones[visited.index(False)]
-			to_visit = [root]
+			root = to_visit.pop()
+			to_visit_in_region = [root]
 
-			while len(to_visit) > 0:
-				e = to_visit.pop()
-				visited[reversed_ones[e]] = True
-				to_visit.extend([n for n in graph[e] if not visited[reversed_ones[n]]])
+			while to_visit_in_region:
+				e = to_visit_in_region.pop()
+				if e in to_visit: to_visit.remove(e)
+				to_visit_in_region.extend([n for n in graph[e] if n in to_visit])
 
 		return counter
 
