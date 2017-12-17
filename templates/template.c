@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-const char* run(char* s)
+char* run(char* s)
 {
 	// Your code goes here
 }
