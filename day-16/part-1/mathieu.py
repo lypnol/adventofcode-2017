@@ -18,7 +18,7 @@ class MathieuSubmission(Submission):
             instruction = dance_move[0]
             if instruction == "s":
                 spin_size = int(dance_move[1:])
-                group = group[self.n - spin_size:] + group[:self.n - spin_size]
+                group = group[- spin_size:] + group[:- spin_size]
             elif instruction == "x":
                 pos1, pos2 = map(int, dance_move[1:].split("/"))
                 buffer = group[pos1]
