@@ -27,7 +27,7 @@ class MathieuSubmission(Submission):
     def one_loop(self, group):
         for instruction, elem1, elem2 in self.dance_moves:
             if instruction == "s":
-                group = group[self.n - elem1:] + group[:self.n - elem1]
+                group = group[- elem1:] + group[:- elem1]
             elif instruction == "x":
                 buffer = group[elem1]
                 group[elem1], group[elem2] = group[elem2], buffer
@@ -36,7 +36,8 @@ class MathieuSubmission(Submission):
                 group[pos1], group[pos2] = elem2, elem1
         return group
 
-    def read_inputs(self, s):
+    @staticmethod
+    def read_inputs(s):
         inputs = s.split(',')
         ret = list()
         for instruction in inputs:
