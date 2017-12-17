@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int run(char* s)
+int run(char* s)
 {
 	const int step_size = atoi(s),
               max_iter = 50*1000*1000;

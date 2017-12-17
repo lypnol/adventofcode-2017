@@ -10,7 +10,7 @@ node_t* node_create(int, node_t*);
 node_t* node_insert(int, node_t*, unsigned int);
 int node_value(node_t*, unsigned int);
 
-const int run(char* s)
+int run(char* s)
 {
 	const int step_size = atoi(s),
               max_iter = 2017;
@@ -49,10 +49,7 @@ node_t* node_create(int value, node_t* next)
 
 node_t* node_insert(int value, node_t* buffer, unsigned int position)
 {
-    if (position < 0) {
-        printf("An error occured while trying to insert a node: negative position\n");
-        exit(0);
-    } else if (position == 0) {
+    if (position == 0) {
         return node_create(value, buffer);
     } else {
         if (buffer == NULL) {
@@ -65,10 +62,7 @@ node_t* node_insert(int value, node_t* buffer, unsigned int position)
 
 int node_value(node_t* node, unsigned int position)
 {
-    if (position < 0) {
-        printf("An error occured while trying to get node value: negative position\n");
-        exit(0);
-    } else if (position == 0) {
+    if (position == 0) {
         if (node == NULL) {
             printf("An error occured while trying to get node value: null node\n");
             exit(0);
