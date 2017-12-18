@@ -8,7 +8,7 @@ class SilvestreSubmission(Submission):
     """
 
     def run(self, s):
-        self.instructions = self.read_input(s)
+        instructions = self.read_input(s)
         self.count_sent_1 = 0
         self.blocked_0 = False
         self.blocked_1 = False
@@ -22,13 +22,13 @@ class SilvestreSubmission(Submission):
         self.queue_1 = deque()
 
         while not (self.blocked_0 and self.blocked_1):
-            current_pos_0, registers_0 = self.execute_instruction(current_pos_0, registers_0, 0)
-            current_pos_1, registers_1 = self.execute_instruction(current_pos_1, registers_1, 1)
+            current_pos_0, registers_0 = self.execute_instruction(instructions, current_pos_0, registers_0, 0)
+            current_pos_1, registers_1 = self.execute_instruction(instructions, current_pos_1, registers_1, 1)
 
         return self.count_sent_1
 
-    def execute_instruction(self, current_pos, registers, prog_id):
-        curr = self.instructions[current_pos]
+    def execute_instruction(self, instructions, current_pos, registers, prog_id):
+        curr = instructions[current_pos]
         cmd, x, y = curr
 
         try:
