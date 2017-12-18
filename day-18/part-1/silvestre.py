@@ -5,9 +5,9 @@ from submission import Submission
 class SilvestreSubmission(Submission):
 
     def run(self, s):
-        instructions, registers = self.read_input(s)
-
-        #import pdb; pdb.set_trace()
+        instructions = self.read_input(s)
+        registers = defaultdict(int)
+        
         last_sound_played = 0
         first_sound_recovered = False
         i = 0  # index de curr dans instructions
@@ -25,8 +25,7 @@ class SilvestreSubmission(Submission):
                 y_val = registers[y]
             except TypeError:
                 pass
-
-            if cmd == "jgz" and x_val != 0:
+            if cmd == "jgz" and x_val >= 0:
                 i = i + y_val
                 continue
             if cmd == "snd":
@@ -49,11 +48,10 @@ class SilvestreSubmission(Submission):
     def read_input(self, s):
         inputs = s.split("\n")
         instructions = list()
-        registers = defaultdict(int)
         for row in inputs:
             rl = row.split()
-            if rl[0] == "snd" or rl[0] == "rcv":
+            if len(rl)==2:
                 instructions.append((rl[0], rl[1], None))
             else:
                 instructions.append((rl[0], rl[1], rl[2]))
-        return instructions, registers
+        return instructions
