@@ -80,8 +80,8 @@ func run(s string) string {
 		instructions = append(instructions, line)
 	}
 
-	input1 := make(chan int64, 1024*10)
-	input2 := make(chan int64, 1024*10)
+	input1 := make(chan int64, 1024*1024*10)
+	input2 := make(chan int64, 1024*1024*10)
 
 	isBlocked = append(isBlocked, false, false)
 
@@ -89,8 +89,13 @@ func run(s string) string {
 	go execute(instructions, 0, input1, input2)
 	go execute(instructions, 1, input2, input1)
 
-	for !areBothBlocked() {
-		<-ticker
+	countTime := 0
+	for countTime < 10 {
+		for !areBothBlocked() {
+			<-ticker
+		}
+		countTime++
+		time.Sleep(10 * time.Millisecond)
 	}
 
 	return fmt.Sprintf("%d", count)
