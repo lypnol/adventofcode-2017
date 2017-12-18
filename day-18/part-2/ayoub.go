@@ -92,6 +92,7 @@ func run(s string) string {
 	countTime := 0
 	for countTime < 10 {
 		for !areBothBlocked() {
+			countTime = 0
 			<-ticker
 		}
 		countTime++
