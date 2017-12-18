@@ -25,7 +25,7 @@ class SilvestreSubmission(Submission):
                 y_val = registers[y]
             except TypeError:
                 pass
-            if cmd == "jgz" and x_val >= 0:
+            if cmd == "jgz" and x_val > 0:
                 i = i + y_val
                 continue
             if cmd == "snd":
