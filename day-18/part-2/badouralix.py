@@ -36,7 +36,7 @@ class BadouralixSubmission(Submission):
 			queue {tuple (Queue, Queue)} -- current queues
 
 		Returns:
-			[(bool, int}] -- (is waiting, next index)
+			[bool] -- is waiting ?
 		"""
 
 		process_id = env['id']
