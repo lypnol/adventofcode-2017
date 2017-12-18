@@ -11,7 +11,6 @@ class MathieuSubmission(Submission):
         current_pos = 0
         while True:
             data = instructions[current_pos]
-
             if data[0] == "jgz":
                 if self.get(data[1]) > 0:
                     current_pos += self.get(data[2])
