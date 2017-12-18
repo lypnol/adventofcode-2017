@@ -3,14 +3,14 @@ from runners.python import Submission
 
 class MathieuSubmission(Submission):
     """J'ai repris l'accès aux variables par dictionnaire de Loïc du jour 8"""
-    count_send_1 = 0
-    blocked_1 = False
-    blocked_0 = False
-    inbox_0 = []
-    inbox_1 = []
 
     def run(self, s):
         self.instructions = [x.split() for x in s.split('\n')]
+        self.count_send_1 = 0
+        self.blocked_0 = False
+        self.blocked_1 = False
+        self.inbox_0 = []
+        self.inbox_1 = []
         current_pos_0, current_pos_1 = 0, 0
         registers_0, registers_1 = {'p': 0}, {'p': 1}
         while not (self.blocked_0 and self.blocked_1):
