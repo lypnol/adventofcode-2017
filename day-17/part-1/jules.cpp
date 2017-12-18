@@ -8,7 +8,7 @@ using namespace std;
 
 int run(string s) {
 	int move;
-    int pos = 0;
+    unsigned int pos = 0;
     move = atoi(s.c_str());
     vector<int> circular;
     for(int i = 1; i < 2018; i++){
@@ -28,6 +28,10 @@ int run(string s) {
 }
 
 int main(int argc, char** argv) {
+    if(argc < 2){
+        cout << "Missing one argument" << endl;
+        exit(1);
+    }
     cout << run(string(argv[1])) << "\n";
     return 0;
 }
