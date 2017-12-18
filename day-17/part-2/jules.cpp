@@ -7,7 +7,7 @@ using namespace std;
 
 int run(string s) {
     int move;
-    int pos = 0;
+    unsigned int pos = 0;
     int return_value = 0;
     move = atoi(s.c_str());
     vector<int> circular;
