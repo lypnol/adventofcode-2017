@@ -80,8 +80,8 @@ func run(s string) string {
 		instructions = append(instructions, line)
 	}
 
-	input1 := make(chan int64, 256)
-	input2 := make(chan int64, 256)
+	input1 := make(chan int64, 1024)
+	input2 := make(chan int64, 1024)
 
 	isBlocked = append(isBlocked, false, false)
 
