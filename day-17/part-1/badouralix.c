@@ -18,7 +18,7 @@ int run(char* s)
     node_t *buffer = node_create(0, NULL);
 
     for (int i = 1; i <= max_iter; i++) {
-        current_position += step_s`ize + 1;
+        current_position += step_size + 1;
         current_position %= i;
         buffer = node_insert(i, buffer, current_position);
     }
