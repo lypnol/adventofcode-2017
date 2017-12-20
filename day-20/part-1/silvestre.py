@@ -7,7 +7,7 @@ class SilvestreSubmission(Submission):
     def run(self, s):
         particles = self.read_input(s)
 
-        FRAME = 1000
+        FRAME = 500
         t = 0
         while t < FRAME:
             for i, p_pos, p_cel, p_acc in particles:
@@ -17,8 +17,7 @@ class SilvestreSubmission(Submission):
 
             t += 1
 
-        result = {i : sum(map(operator.abs, particle[1])) for i, particle in enumerate(particles)}
-        return min(result, key=result.get)
+        return min(particles, key=lambda particle: sum(map(operator.abs, particle[1])))[0]
 
     def read_input(self, s):
         """
