@@ -23,10 +23,10 @@ class MathieuSubmission(Submission):
         remaining_particles = set(range(n))
         collisions = self.particles_in_collision(positions_t, remaining_particles)
         remaining_particles = remaining_particles - collisions
-        while not self.no_more_collision(remaining_particles,positions_t,accelerations):
+        while not self.no_more_collision(remaining_particles, positions_t, accelerations):
             for particle in remaining_particles:
-                velocities_t[particle]=tuple(map(sum,zip(velocities_t[particle],accelerations[particle])))
-                positions_t[particle]=tuple(map(sum, zip(positions_t[particle],velocities_t[particle])))
+                velocities_t[particle] = tuple(map(sum, zip(velocities_t[particle], accelerations[particle])))
+                positions_t[particle] = tuple(map(sum, zip(positions_t[particle], velocities_t[particle])))
             collisions = self.particles_in_collision(positions_t, remaining_particles)
             remaining_particles = remaining_particles - collisions
 
@@ -51,20 +51,19 @@ class MathieuSubmission(Submission):
         return True
 
     def particles_in_collision(self, positions_t, remaining_particles):
-        if len(remaining_particles)==len(set(positions_t[part] for part in remaining_particles)):
+        if len(remaining_particles) == len(set(positions_t[part] for part in remaining_particles)):
             return set()
         else:
             collision = set()
             to_visit = set(remaining_particles)
-            to_remove=set()
+            to_remove = set()
             while to_visit:
-                particule_0 = to_visit.pop()
-                to_visit=to_visit-to_remove
-                to_remove=set()
-                for particule_1 in to_visit:
-                    if positions_t[particule_1] == positions_t[particule_0]:
-                        collision.add(particule_0)
-                        collision.add(particule_1)
-                        to_remove.add(particule_1)
+                particle_0 = to_visit.pop()
+                to_visit = to_visit - to_remove
+                to_remove = set()
+                for particle_1 in to_visit:
+                    if positions_t[particle_1] == positions_t[particle_0]:
+                        collision.add(particle_0)
+                        collision.add(particle_1)
+                        to_remove.add(particle_1)
             return collision
-

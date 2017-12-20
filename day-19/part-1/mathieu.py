@@ -1,9 +1,7 @@
-import re
 from runners.python import Submission
 
 
 class MathieuSubmission(Submission):
-
     def run(self, s):
         lines = s.split('\n')
         top = lines[0].index('|'), 0
@@ -18,12 +16,12 @@ class MathieuSubmission(Submission):
             i += 1
             if go_right:
                 if previous_plus_pos[0] + i >= len(lines[0]):
-                   break
+                    break
                 current_char = lines[previous_plus_pos[1]][previous_plus_pos[0] + i]
                 current_pos = previous_plus_pos[0] + i, previous_plus_pos[1]
             elif go_left:
                 if previous_plus_pos[0] - i < 0:
-                   break
+                    break
                 current_char = lines[previous_plus_pos[1]][previous_plus_pos[0] - i]
                 current_pos = previous_plus_pos[0] - i, previous_plus_pos[1]
             elif go_up:
@@ -36,7 +34,7 @@ class MathieuSubmission(Submission):
                     break
                 current_char = lines[previous_plus_pos[1] + i][previous_plus_pos[0]]
                 current_pos = previous_plus_pos[0], previous_plus_pos[1] + i
-            if current_char==' ':
+            if current_char == ' ':
                 break
             elif current_char not in {'|', '+', '-'}:
                 path += current_char
@@ -46,16 +44,16 @@ class MathieuSubmission(Submission):
                 i = 0
                 if go_down or go_up:
                     if lines[previous_plus_pos[1]][previous_plus_pos[0] - 1] != " ":
-                        go_down, go_up = False, False
-                        go_left, go_right = True, False
+                        go_down = go_up = go_right = False
+                        go_left = True
                     else:
-                        go_down, go_up = False, False
-                        go_left, go_right = False, True
+                        go_down = go_up = go_left = False
+                        go_right = True
                 else:
                     if lines[previous_plus_pos[1] - 1][previous_plus_pos[0]] != " ":
-                        go_down, go_up = False, True
-                        go_left, go_right = False, False
+                        go_left = go_right = go_down = False
+                        go_up = True
                     else:
-                        go_down, go_up = True, False
-                        go_left, go_right = False, False
+                        go_left = go_right = go_up = False
+                        go_down = True
         return path
