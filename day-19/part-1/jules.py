@@ -8,6 +8,8 @@ class JulesSubmission(Submission):
     def run(self, s):
 
         table = s.split('\n')
+        # reformat last line destroyed by rstrip()
+        table[-1] = '{0: <{1}}'.format(table[-1], len(table[0]))
         position = (table[0].index('|'), 0)
         direction = (0, 1)
         message = ''
