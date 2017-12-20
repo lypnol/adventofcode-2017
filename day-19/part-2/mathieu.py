@@ -37,9 +37,11 @@ class MathieuSubmission(Submission):
                     break
                 current_char = lines[previous_plus_pos[1] + i][previous_plus_pos[0]]
                 current_pos = previous_plus_pos[0], previous_plus_pos[1] + i
-            if current_char not in {' ', '|', '+', '-'}:
+            if current_char==' ':
+                break
+            elif current_char not in {'|', '+', '-'}:
                 path += current_char
-            if current_char == "+":
+            elif current_char == "+":
                 previous_plus_pos = current_pos
                 current_char = ""
                 i = 0
@@ -57,4 +59,4 @@ class MathieuSubmission(Submission):
                     else:
                         go_down, go_up = True, False
                         go_left, go_right = False, False
-        return step_nb-1
+        return step_nb

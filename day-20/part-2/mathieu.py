@@ -36,16 +36,19 @@ class MathieuSubmission(Submission):
         projection_x = [(positions_t[particle][0], accelerations[particle][0]) for particle in remaining_particles]
         projection_x = sorted(projection_x, key=lambda x: x[0])
         no_more_collision_x = all(par_0[1] <= par_1[1] for par_0, par_1 in zip(projection_x[:-1], projection_x[1:]))
-
+        if not no_more_collision_x:
+            return False
         projection_y = [(positions_t[particle][1], accelerations[particle][1]) for particle in remaining_particles]
         projection_y = sorted(projection_y, key=lambda x: x[0])
         no_more_collision_y = all(par_0[1] <= par_1[1] for par_0, par_1 in zip(projection_y[:-1], projection_y[1:]))
-
+        if not no_more_collision_y:
+            return False
         projection_z = [(positions_t[particle][2], accelerations[particle][2]) for particle in remaining_particles]
         projection_z = sorted(projection_z, key=lambda x: x[0])
         no_more_collision_z = all(par_0[1] <= par_1[1] for par_0, par_1 in zip(projection_z[:-1], projection_z[1:]))
-
-        return no_more_collision_x and no_more_collision_y and no_more_collision_z
+        if not no_more_collision_z:
+            return False
+        return True
 
     def particles_in_collision(self, positions_t, remaining_particles):
         if len(remaining_particles)==len(set(positions_t[part] for part in remaining_particles)):
