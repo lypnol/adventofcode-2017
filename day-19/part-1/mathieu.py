@@ -36,7 +36,7 @@ class MathieuSubmission(Submission):
                 current_pos = previous_plus_pos[0], previous_plus_pos[1] + i
             if current_char == ' ':
                 break
-            elif current_char not in {'|', '+', '-'}:
+            if current_char not in {'|', '+', '-'}:
                 path += current_char
             elif current_char == "+":
                 previous_plus_pos = current_pos
