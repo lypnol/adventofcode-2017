@@ -10,7 +10,7 @@ class SilvestreSubmission(Submission):
         current_config = (('.','#','.'),('.','.','#'),('#','#','#'))
 
         n = 0 # iterations number
-        while n < 5:
+        while n < 18:
             # Split
             blocks = self.split_config(current_config)
 
