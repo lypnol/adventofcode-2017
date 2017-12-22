@@ -14,8 +14,6 @@ class SilvestreSubmission(Submission):
         direction = 0
         while burst < 10000000:
             current_grid, virus_pos, direction, counter = self.execute_burst(current_grid, virus_pos, direction, counter)
-            if burst % 1000000 == 0:
-                print(burst)
             burst += 1
         
         return counter
